@@ -1,33 +1,26 @@
 
-// Imports from NPM
 import * as THREE from 'three';
-import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js'
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
-// // import getClasses from './getClasses'
+import calculateGrid  from './grid';
+import { cameraSettings, lightSettings, controlSettings } from './defaults';
 
-// // console.log("ran from index.js");
-// // getClasses();
-
-// // const obj = { a: 'alpha', b: 'bravo' }
-// // const newObj = { ...obj, c: 'charlie' }
-// // console.log(newObj)
-// import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r125/build/three.module.js';
-// import { FlyControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r125/examples/jsm/controls/FlyControls.js';
-// // import { FlyControls } from '../jsm/FlyControls.js';
 
 function main() {
   // Setup renderer
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
 
+  calculateGrid();
+
   // Camera
-  const fov = 90;
+  const fov = cameraSettings.fov;
   const aspect = window.innerWidth / window.innerHeight;
-  const near = 0.1;
-  const far = 1000;
+  const near = cameraSettings.near;
+  const far = cameraSettings.far;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.z = 60;
-  camera.position.y = 20;
+  camera.position.z = cameraSettings.startZ;
+  camera.position.y = cameraSettings.startY;
 
   let controls;
 
@@ -39,11 +32,12 @@ function main() {
   let grid = new Array(gridSize).fill(new Array(gridSize).fill(0));
 
   // Lighting
+  // Add an iterator here for multiple lights (lightSettings is an array)
   {
-    const color = 0xFFFFFF;
-    const intensity = 0.75;
+    const color = lightSettings[0].color;
+    const intensity = lightSettings[0].intensity;
     const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(-1, 2, 4);
+    light.position.set(lightSettings[0].x, lightSettings[0].y, lightSettings[0].z);
     scene.add(light);
   }
 
@@ -116,11 +110,11 @@ function main() {
   // Controls
   controls = new FlyControls( camera, renderer.domElement );
 
-  controls.movementSpeed = 10;
+  controls.movementSpeed = controlSettings.movSpeed;
   controls.domElement = renderer.domElement;
-  controls.rollSpeed = Math.PI / 48;
-  controls.autoForward = false;
-  controls.dragToLook = true;
+  controls.rollSpeed = controlSettings.rollSpeed;
+  controls.autoForward = controlSettings.autoForward;
+  controls.dragToLook = controlSettings.dragToLook;
 
   // Dynamic resizing/rendering
   function resizeRendererToDisplaySize(renderer) {

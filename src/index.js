@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
 import calculateGrid  from './grid';
-import { cameraSettings, lightSettings, controlSettings } from './defaults';
+import nodes from './nodes.json';
+import { cameraSettings, lightSettings, sphereSettings, gridSettings, controlSettings } from './defaults';
 
 
 function main() {
@@ -19,6 +20,7 @@ function main() {
   const near = cameraSettings.near;
   const far = cameraSettings.far;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.x = cameraSettings.startX;
   camera.position.z = cameraSettings.startZ;
   camera.position.y = cameraSettings.startY;
 
@@ -66,8 +68,8 @@ function main() {
   }
 
   function addObject(x, y, obj) {
-    obj.position.x = x * spread;
-    obj.position.z = y * spread;
+    obj.position.x = x * gridSettings.spread;
+    obj.position.z = y * gridSettings.spread;
 
     scene.add(obj);
     objects.push(obj);
@@ -79,33 +81,53 @@ function main() {
   }
 
   // Sphere props
-  const radius = 5;  
-  const detail = 4;
+  const radius = sphereSettings.radius;  
+  const detail = sphereSettings.detail;
 
-  // This can be made much neater
+ 
+
+  // Iterate through grid, when we find an object, add it to the geometry
+  // TODO
+  function initGrid() {
+    nodes.forEach(node => {
+      // Position is subtracted 15 to get back to origin
+      addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
+    })
+    // const gridPositions = calculateGrid();
+    // gridPositions.forEach(columns => {
+    //   columns.forEach(el => {
+    //     if (el !== 0) {
+    //       console.log(el);
+    //     }
+    //   })
+    // })
+  }
+
+  initGrid();
+
   addSolidGeometry(-4, 0, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(-2, 0, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(0, 0, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(2, 0, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(4, 0, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-2, 0, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(0, 0, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(2, 0, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(4, 0, new THREE.DodecahedronGeometry(radius, detail));
 
-  addSolidGeometry(-4, 2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(-2, 2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(0, 2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(2, 2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(4, 2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-4, 2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-2, 2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(0, 2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(2, 2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(4, 2, new THREE.DodecahedronGeometry(radius, detail));
 
-  addSolidGeometry(-4, -2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(-2, -2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(0, -2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(2, -2, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(4, -2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-4, -2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-2, -2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(0, -2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(2, -2, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(4, -2, new THREE.DodecahedronGeometry(radius, detail));
 
-  addSolidGeometry(-4, -4, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(-2, -4, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(0, -4, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(2, -4, new THREE.DodecahedronGeometry(radius, detail));
-  addSolidGeometry(4, -4, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-4, -4, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(-2, -4, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(0, -4, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(2, -4, new THREE.DodecahedronGeometry(radius, detail));
+  // addSolidGeometry(4, -4, new THREE.DodecahedronGeometry(radius, detail));
 
   // Controls
   controls = new FlyControls( camera, renderer.domElement );

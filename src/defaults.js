@@ -4,6 +4,7 @@ export const cameraSettings = {
   far: 1000,
   startZ: 60,
   startY: 20,
+  startX: 0,
 }
 
 // Lighting
@@ -21,10 +22,9 @@ export const lightSettings = [
 // Grid & Spheres
 export const gridSettings = {
   size: 30,
-  spread: 15,
+  spread: 20,
 }
 export const grid = {
-  spread: 15,
   empty: new Array(gridSettings.size).fill(new Array(gridSettings.size).fill(0)),
 }
 
@@ -36,7 +36,7 @@ export const sphereSettings = {
 // Controls
 export const controlSettings = {
   movSpeed: 10,
-  rollSpeed: Math.PI / 48,
+  rollSpeed: Math.PI / 64,
   autoForward: false,
   dragToLook: true,
 }

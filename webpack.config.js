@@ -21,7 +21,14 @@ module.exports = {
           //  without additional settings, this will reference a .babelrc
           loader: 'babel-loader'
         }
-      }
+      },
+      {
+
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+
+        type: 'asset/resource',
+
+      },
     ]
   },
 

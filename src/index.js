@@ -4,7 +4,9 @@ import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
 import calculateGrid  from './grid';
 import nodes from './nodes.json';
-import { cameraSettings, lightSettings, sphereSettings, gridSettings, controlSettings } from './defaults';
+import { cameraSettings, sceneSettings, lightSettings, sphereSettings, gridSettings, controlSettings } from './defaults';
+
+// import GreySeal from './assets/greySealSkull.jpg';
 
 
 function main() {
@@ -24,10 +26,13 @@ function main() {
   camera.position.z = cameraSettings.startZ;
   camera.position.y = cameraSettings.startY;
 
+  const clock = new THREE.Clock();
+
   let controls;
 
   // Init scene
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color(sceneSettings.backgroundColor);
 
   // Main grid
   const gridSize = 30;
@@ -52,6 +57,7 @@ function main() {
 
   // Object & material creation
   let objects = [];  // Array of objects
+  // Could do with adding an array of edges as well
   const spread = 15;
 
   function createMaterial() {
@@ -80,6 +86,34 @@ function main() {
     addObject(x, y, mesh);
   }
 
+  function addPlaneGeometry(x, y, material) {
+    const loader = new THREE.TextureLoader();
+    const planeMaterial = new THREE.MeshBasicMaterial({
+      // These are loaded from the dist folder
+      // TODO not sure how to set up with webpack better?
+      map: loader.load(material),
+      // map: loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg'),
+      // color: 0xFF8844,
+    })
+    const planeGeometry = new THREE.PlaneGeometry(9, 9);
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    addObject(x, y, planeMesh);
+  }
+
+  function addEdgeGeometry(x, y) {
+    // Test cylinder (edge)
+    const radiusTop = 0.5;
+    const radiusBottom = 0.5;
+    const height = 70;
+    const radialSegments = 12;
+    // addSolidGeometry(1, 0, new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments));
+    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments), createMaterial());
+    mesh.rotation.x = 1.57;  // In radians
+    mesh.rotation.z = -0.7;
+
+    addObject(x, y, mesh);
+  }
+
   // Sphere props
   const radius = sphereSettings.radius;  
   const detail = sphereSettings.detail;
@@ -91,43 +125,29 @@ function main() {
   function initGrid() {
     nodes.forEach(node => {
       // Position is subtracted 15 to get back to origin
-      addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
+      // addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
+      addPlaneGeometry((node.position[0])-15, (node.position[1])-15, node.image);
     })
-    // const gridPositions = calculateGrid();
-    // gridPositions.forEach(columns => {
-    //   columns.forEach(el => {
-    //     if (el !== 0) {
-    //       console.log(el);
-    //     }
-    //   })
-    // })
+
   }
 
   initGrid();
 
-  addSolidGeometry(-4, 0, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(-2, 0, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(0, 0, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(2, 0, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(4, 0, new THREE.DodecahedronGeometry(radius, detail));
+  // Test shape
+  // addSolidGeometry(-4, 0, new THREE.DodecahedronGeometry(radius, detail));
 
-  // addSolidGeometry(-4, 2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(-2, 2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(0, 2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(2, 2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(4, 2, new THREE.DodecahedronGeometry(radius, detail));
+  // Test cylinder (edge)
+  // const radiusTop = 0.5;
+  // const radiusBottom = 0.5;
+  // const height = 8;
+  // const radialSegments = 12;
+  // addSolidGeometry(1, 0, new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments));
+  addEdgeGeometry(-1.6, -0.69);
 
-  // addSolidGeometry(-4, -2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(-2, -2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(0, -2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(2, -2, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(4, -2, new THREE.DodecahedronGeometry(radius, detail));
+  // Test object
+  // adadPlaneGeometry(0, 0, './assets/greysealskull.jpg');
 
-  // addSolidGeometry(-4, -4, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(-2, -4, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(0, -4, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(2, -4, new THREE.DodecahedronGeometry(radius, detail));
-  // addSolidGeometry(4, -4, new THREE.DodecahedronGeometry(radius, detail));
+
 
   // Controls
   controls = new FlyControls( camera, renderer.domElement );
@@ -152,7 +172,9 @@ function main() {
 
   // Main render loop
   function render(time) {
-    time *= 0.001;  // convert time to seconds
+    // Time elapsed since last render
+    const delta = clock.getDelta();
+
 
     if (resizeRendererToDisplaySize(renderer)) {
       const canvas = renderer.domElement;
@@ -160,22 +182,16 @@ function main() {
       camera.updateProjectionMatrix();
     }
 
-    // Adds rotation to cubes
-    // cubes.forEach((cube, ndx) => {
-    //   const speed = 1 + ndx * .1;
-    //   const rot = time * speed;
-    //   cube.rotation.x = rot;
-    //   cube.rotation.y = rot;
-    // });
-
     // controls.movementSpeed = 0.33 * d;
-    controls.update( time/50 );
+    controls.update( delta );
 
     renderer.render(scene, camera);
 
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
+  console.log("Outputting all objects in scene");
+  console.log(objects);
 }
 
 // Run main function loop

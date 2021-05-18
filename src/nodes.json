@@ -2,9 +2,9 @@
   {
     "id": 0,
     "name": "Grey Seal Skull",
-    "desc": "Description",
+    "desc": "From the Natural Sciences Collection of the Great North Museum: Hancock This skull is from a Grey Seal and came from the Farne Islands off the coast of Northumberland, UK. Grey Seals are predators and eat between four and six percent of their body weight in one feeding per day. The diet consists of a large variety of fish and the occasional crustacean (lobsters, shrimps and prawns) and molluscs (squid).",
     "sound": "",
-    "image": "",
+    "image": "./assets/greysealskull.jpg",
     "seeAlso": "",
     "position": [14, 14],
     "connections": [1, 2, 3, 5]
@@ -12,9 +12,9 @@
   {
     "id": 1,
     "name": "Grey Seals",
-    "desc": "",
-    "sound": "",
-    "image": "",
+    "desc": "The grey seal grows up to three metres long and over 200kg in weight, and is one of Britain’s largest native predator. The UK supports about half of the global population of the species, over 100,000 seals. As populations have increased, the seals have spread looking for new places to ‘haul out’ and to breed. The largest colonies are in Scotland, but another famous local colony is found on Northumberland’s rocky, inaccessible Farne Islands which provide seals with an ideal refuge to rear their pups.",
+    "sound": "https://music.daviddelahaye.co.uk/track/seal-002-2",
+    "image": "./assets/greyseals.jpg",
     "seeAlso": "",
     "position": [14, 13],
     "connections": [0, 7]
@@ -22,9 +22,9 @@
   {
     "id": 2,
     "name": "Collected by Grace Hickling",
-    "desc": "",
+    "desc": "Researcher and conservationist Grace Hickling pioneered the study of grey seals on the Farne Islands, which became recognised as an important habitat for seals and seabirds. She was a Longstone Lighthouse keeper’s daughter and worked as an intelligence officer during WWII where she met Hancock Museum curator Tom Russell Goddard who first introduced her to the Farne Islands. Grace was the first woman Honorary Secretary of the Natural History Society of Northumbria, a position she held from 1948-1986. She was awarded an MBE for her exceptional service to the Society in 1974.",
     "sound": "",
-    "image": "",
+    "image": "./assets/graceHickling.jpg",
     "seeAlso": "",
     "position": [13, 14],
     "connections": [0, 3]
@@ -32,9 +32,9 @@
   {
     "id": 3,
     "name": "The Farne Islands",
-    "desc": "",
-    "sound": "",
-    "image": "",
+    "desc": "The rocky, inaccessible Farne Islands off the Northumberland coast provide seals with an ideal refuge to rear their pups, and, free from persecution, the colony has grown to be one of the largest on England’s east coast, about 10,000 strong, with nearly 3% of all the UK’s pups born here each year.",
+    "sound": "https://music.daviddelahaye.co.uk/track/seal-002-2",
+    "image": "./assets/farneislands.jpg",
     "seeAlso": "",
     "position": [14, 15],
     "connections": [0, 2]
@@ -42,9 +42,9 @@
   {
     "id": 4,
     "name": "St Cuthbert the Conservationist",
-    "desc": "",
+    "desc": "St Cuthbert (CE 634 – CE 687) was an Anglo-Saxon Saint and bishop who lived as a hermit on the Farne Islands from 676 - 685. He was said to have great affinity for nature and helped protect the local wildlife. St Cuthbert has been described as an early conservationist.",
     "sound": "",
-    "image": "",
+    "image": "./assets/stcuthbert.jpg",
     "seeAlso": "",
     "position": [15, 14],
     "connections": [3]
@@ -52,9 +52,9 @@
   {
     "id": 5,
     "name": "Seal Habitat Loss",
-    "desc": "",
+    "desc": "Seals face emerging threats from climate change. Storms are one of the biggest threats to seal pups, and the increasingly extreme weather of the warmer climate is an unknown risk to vulnerable young seals in their coastal colonies. As sea levels rise, the shorelines that host the haul out sites could be inundated. Extensive human development along coastlines does not provide them with many alternatives. Squeezed between a rising sea and built up shore, seals of the future may struggle to find a home.",
     "sound": "",
-    "image": "",
+    "image": "./assets/sealhabitatloss.jpg",
     "seeAlso": "",
     "position": [13, 13],
     "connections": [0, 6]
@@ -62,7 +62,7 @@
   {
     "id": 6,
     "name": "Whitley Bay Landslip",
-    "desc": "",
+    "desc": "As sea levels rise, storms become more frequent, and sea defences deteriorate, landslips will become more common. In January 2021 an area of cliffs near Whitley Bay on the North East coast collapsed into the sea.",
     "sound": "",
     "image": "",
     "seeAlso": "",
@@ -72,9 +72,9 @@
   {
     "id": 7,
     "name": "Family Trips to the Coast",
-    "desc": "",
+    "desc": "“The first time I saw a wild seal was on a trip to the NE 30 years ago. Now it’s a regular event for me & the kids, looking out for them at Tees Barrage on our walks.” @HeartofglassU on Twitter",
     "sound": "",
-    "image": "",
+    "image": "./assets/tripstocoast.jpg",
     "seeAlso": "",
     "position": [14, 12],
     "connections": [1, 6]
@@ -82,9 +82,9 @@
   {
     "id": 8,
     "name": "Northumberland's Cuddy Ducks",
-    "desc": "",
+    "desc": "Northumberland’s Eider Ducks are strongly associated with St Cuthbert and this is reflected in their local name of Cuddy Duck. Northumberland’s coastline supports nationally significant numbers of both breeding and wintering Eiders and this was recognised in 2019 by the designation of the Berwick to St Mary’s Marine Conservation Zone (MCZ).",
     "sound": "",
-    "image": "",
+    "image": "./assets/cuddyducks.jpg",
     "seeAlso": "",
     "position": [15, 13],
     "connections": [4]

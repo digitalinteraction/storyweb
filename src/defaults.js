@@ -1,3 +1,7 @@
+export const sceneSettings = {
+  backgroundColor: 0xA0A0A0
+}
+
 export const cameraSettings = {
   fov: 90,
   near: 0.1,
@@ -22,7 +26,7 @@ export const lightSettings = [
 // Grid & Spheres
 export const gridSettings = {
   size: 30,
-  spread: 20,
+  spread: 40,
 }
 export const grid = {
   empty: new Array(gridSettings.size).fill(new Array(gridSettings.size).fill(0)),
@@ -35,8 +39,8 @@ export const sphereSettings = {
 
 // Controls
 export const controlSettings = {
-  movSpeed: 10,
-  rollSpeed: Math.PI / 64,
+  movSpeed: 30,
+  rollSpeed: Math.PI / 24,
   autoForward: false,
   dragToLook: true,
 }

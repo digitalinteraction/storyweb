@@ -14,6 +14,9 @@ function main() {
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
 
+  // Info panel
+  const infoPanel = document.querySelector('#info');
+
   calculateGrid();
 
   // Camera
@@ -100,6 +103,22 @@ function main() {
     addObject(x, y, planeMesh);
   }
 
+  function addBoxGeometry(x, y, material) {
+    const loader = new THREE.TextureLoader();
+    const boxMaterial = new THREE.MeshBasicMaterial({
+      // These are loaded from the dist folder
+      // TODO not sure how to set up with webpack better?
+      map: loader.load(material),
+      // map: loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg'),
+      // color: 0xFF8844,
+    })
+    const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
+    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    addObject(x, y, boxMesh);
+  }
+
+  // Could also use TubeGeometry to make this, could be a bit more organic
+
   function addEdgeGeometry(x, y) {
     // Test cylinder (edge)
     const radiusTop = 0.5;
@@ -126,7 +145,7 @@ function main() {
     nodes.forEach(node => {
       // Position is subtracted 15 to get back to origin
       // addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
-      addPlaneGeometry((node.position[0])-15, (node.position[1])-15, node.image);
+      addBoxGeometry((node.position[0])-15, (node.position[1])-15, node.image);
     })
 
   }

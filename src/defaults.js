@@ -6,9 +6,9 @@ export const cameraSettings = {
   fov: 90,
   near: 0.1,
   far: 1000,
-  startZ: 60,
-  startY: 20,
-  startX: 0,
+  startZ: 20,
+  startY: 10,
+  startX: -40,
 }
 
 // Lighting

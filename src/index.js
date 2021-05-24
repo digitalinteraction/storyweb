@@ -10,9 +10,21 @@ import { cameraSettings, sceneSettings, lightSettings, sphereSettings, gridSetti
 
 
 function main() {
+  let raycaster, mouse;
+  let INTERSECTED;
+
+  function init() {
+    // Move other init to here later
+    raycaster = new THREE.Raycaster(); // create once
+    mouse = new THREE.Vector2(); // ""
+
+    // Event listener for mouse
+    document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+  }
   // Setup renderer
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
+  init();
 
   // Info panel
   const infoPanel = document.querySelector('#info');
@@ -36,6 +48,9 @@ function main() {
   // Init scene
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(sceneSettings.backgroundColor);
+
+  // Interaction
+  // const interaction = new Interaction(renderer, scene, camera);
 
   // Main grid
   const gridSize = 30;
@@ -103,7 +118,7 @@ function main() {
     addObject(x, y, planeMesh);
   }
 
-  function addBoxGeometry(x, y, material) {
+  function addBoxGeometry(x, y, material, name) {
     const loader = new THREE.TextureLoader();
     const boxMaterial = new THREE.MeshBasicMaterial({
       // These are loaded from the dist folder
@@ -114,6 +129,7 @@ function main() {
     })
     const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
     const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    boxMesh.name = name;
     addObject(x, y, boxMesh);
   }
 
@@ -145,7 +161,7 @@ function main() {
     nodes.forEach(node => {
       // Position is subtracted 15 to get back to origin
       // addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
-      addBoxGeometry((node.position[0])-15, (node.position[1])-15, node.image);
+      addBoxGeometry((node.position[0])-15, (node.position[1])-15, node.image, node.name);
     })
 
   }
@@ -189,6 +205,64 @@ function main() {
     return needResize;
   }
 
+  
+  
+  function onDocumentMouseDown(event) {
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    console.log("click");
+  }
+  
+
+  // function onDocumentMouseDown( event ) 
+  // {
+  //   // the following line would stop any other event handler from firing
+  //   // (such as the mouse's TrackballControls)
+  //   // event.preventDefault();
+    
+  //   // console.log(`Click.`);
+    
+  //   // update the mouse variable
+  //   // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  //   // mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+  //   // console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
+
+  //   // Calculates the offset of the window
+  //   let et = event.target, de = renderer.domElement;
+  //   let trueX = (event.pageX - et.offsetLeft);
+  //   let trueY = (event.pageX - et.offsetTop);
+  //   mouse.x = (((trueX / de.width) * 2) -1);
+  //   mouse.y = (((trueY / de.height) * -2) +1);
+  //   console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
+    
+  //   // Raycasting
+  //   raycaster.setFromCamera( mouse, camera );
+
+  //   // const intersects = raycaster.intersectObjects( objects, recursiveFlag );
+  //   const intersects = raycaster.intersectObjects( scene.children );
+    
+  //   // find intersections
+
+  //   // create a Ray with origin at the mouse position
+  //   //   and direction into the scene (camera direction)
+  //   // var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+  //   // projector.unprojectVector( vector, camera );
+  //   // var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+  //   // // create an array containing all objects in the scene with which the ray intersects
+  //   // var intersects = ray.intersectObjects( targetList );
+    
+  //   // if there is one (or more) intersections
+  //   if ( intersects.length > 0 )
+  //   {
+  //     console.log(intersects);
+  //     console.log("Hit @ " + toString( intersects[0].point ) );
+  //     intersects[0].object.material.color.setHex(0x000000);
+  //   }
+
+  // }
+
+
   // Main render loop
   function render(time) {
     // Time elapsed since last render
@@ -204,11 +278,37 @@ function main() {
     // controls.movementSpeed = 0.33 * d;
     controls.update( delta );
 
+    // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
+    raycaster.setFromCamera( mouse, camera );
+
+    const intersects = raycaster.intersectObjects( scene.children );
+    
+    // If we have intersected things
+    if ( intersects.length > 0 ) {
+      
+      
+      // If we have intersected a new thing (closest)
+      if ( INTERSECTED != intersects[ 0 ].object ) {
+        // Store the last intersected thing
+        INTERSECTED = intersects[ 0 ].object;
+        console.log("setting intersect");
+        console.log(intersects[0]);
+      }
+
+    } 
+    // We intersected nothing, clear our store
+    else {
+
+      INTERSECTED = null;
+
+    }
+
+
     renderer.render(scene, camera);
 
     requestAnimationFrame(render);
   }
-  requestAnimationFrame(render);
+  window.requestAnimationFrame(render);
   console.log("Outputting all objects in scene");
   console.log(objects);
 }

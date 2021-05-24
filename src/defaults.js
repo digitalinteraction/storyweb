@@ -4,7 +4,7 @@ export const sceneSettings = {
 
 export const cameraSettings = {
   fov: 90,
-  near: 0.1,
+  near: 1,
   far: 1000,
   startZ: 20,
   startY: 10,

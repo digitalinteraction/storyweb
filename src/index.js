@@ -4,53 +4,39 @@ import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
 import calculateGrid  from './grid';
 import nodes from './nodes.json';
-import { cameraSettings, sceneSettings, lightSettings, sphereSettings, gridSettings, controlSettings } from './defaults';
+import { cameraSettings, sceneSettings, lightSettings, sphereSettings, gridSettings, controlSettings, debug } from './defaults';
 
 // import GreySeal from './assets/greySealSkull.jpg';
 
+let camera, scene, controls, raycaster, renderer;
+let INTERSECTED;
 
-function main() {
-  let raycaster, mouse;
-  let INTERSECTED;
+let mouse = new THREE.Vector2(); 
 
-  function init() {
-    // Move other init to here later
-    raycaster = new THREE.Raycaster(); // create once
-    mouse = new THREE.Vector2(); // ""
+const clock = new THREE.Clock();
 
-    // Event listener for mouse
-    document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-  }
-  // Setup renderer
-  const canvas = document.querySelector('#c');
-  const renderer = new THREE.WebGLRenderer({canvas});
-  init();
+init();
+animate();
 
-  // Info panel
-  const infoPanel = document.querySelector('#info');
-
-  calculateGrid();
+function init() {
+  
 
   // Camera
   const fov = cameraSettings.fov;
   const aspect = window.innerWidth / window.innerHeight;
   const near = cameraSettings.near;
   const far = cameraSettings.far;
-  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.position.x = cameraSettings.startX;
   camera.position.z = cameraSettings.startZ;
   camera.position.y = cameraSettings.startY;
 
-  const clock = new THREE.Clock();
-
-  let controls;
-
   // Init scene
-  const scene = new THREE.Scene();
+  scene = new THREE.Scene();
   scene.background = new THREE.Color(sceneSettings.backgroundColor);
 
-  // Interaction
-  // const interaction = new Interaction(renderer, scene, camera);
+  // Not currently in use
+  calculateGrid();
 
   // Main grid
   const gridSize = 30;
@@ -66,6 +52,7 @@ function main() {
     scene.add(light);
   }
 
+  // Add objects to scene
   // Box geometry
   const boxWidth = 1;
   const boxHeight = 1;
@@ -170,19 +157,18 @@ function main() {
 
   // Test shape
   // addSolidGeometry(-4, 0, new THREE.DodecahedronGeometry(radius, detail));
+    // Test object
+  // addPlaneGeometry(0, 0, './assets/greysealskull.jpg');
 
-  // Test cylinder (edge)
-  // const radiusTop = 0.5;
-  // const radiusBottom = 0.5;
-  // const height = 8;
-  // const radialSegments = 12;
-  // addSolidGeometry(1, 0, new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments));
   addEdgeGeometry(-1.6, -0.69);
 
-  // Test object
-  // adadPlaneGeometry(0, 0, './assets/greysealskull.jpg');
+  raycaster = new THREE.Raycaster();
 
-
+  // Setup renderer
+  const canvas = document.querySelector('#c');
+  renderer = new THREE.WebGLRenderer({canvas});
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Controls
   controls = new FlyControls( camera, renderer.domElement );
@@ -193,125 +179,156 @@ function main() {
   controls.autoForward = controlSettings.autoForward;
   controls.dragToLook = controlSettings.dragToLook;
 
-  // Dynamic resizing/rendering
-  function resizeRendererToDisplaySize(renderer) {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      renderer.setSize(width, height, false);
-    }
-    return needResize;
-  }
+  // Event listener for mouse
+  document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
-  
-  
-  function onDocumentMouseDown(event) {
-    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    console.log("click");
-  }
-  
+  // Event listener for resize
+  window.addEventListener( 'resize', onWindowResize );
 
-  // function onDocumentMouseDown( event ) 
-  // {
-  //   // the following line would stop any other event handler from firing
-  //   // (such as the mouse's TrackballControls)
-  //   // event.preventDefault();
-    
-  //   // console.log(`Click.`);
-    
-  //   // update the mouse variable
-  //   // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  //   // mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-  //   // console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
-
-  //   // Calculates the offset of the window
-  //   let et = event.target, de = renderer.domElement;
-  //   let trueX = (event.pageX - et.offsetLeft);
-  //   let trueY = (event.pageX - et.offsetTop);
-  //   mouse.x = (((trueX / de.width) * 2) -1);
-  //   mouse.y = (((trueY / de.height) * -2) +1);
-  //   console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
-    
-  //   // Raycasting
-  //   raycaster.setFromCamera( mouse, camera );
-
-  //   // const intersects = raycaster.intersectObjects( objects, recursiveFlag );
-  //   const intersects = raycaster.intersectObjects( scene.children );
-    
-  //   // find intersections
-
-  //   // create a Ray with origin at the mouse position
-  //   //   and direction into the scene (camera direction)
-  //   // var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-  //   // projector.unprojectVector( vector, camera );
-  //   // var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-
-  //   // // create an array containing all objects in the scene with which the ray intersects
-  //   // var intersects = ray.intersectObjects( targetList );
-    
-  //   // if there is one (or more) intersections
-  //   if ( intersects.length > 0 )
-  //   {
-  //     console.log(intersects);
-  //     console.log("Hit @ " + toString( intersects[0].point ) );
-  //     intersects[0].object.material.color.setHex(0x000000);
-  //   }
-
-  // }
-
-
-  // Main render loop
-  function render(time) {
-    // Time elapsed since last render
-    const delta = clock.getDelta();
-
-
-    if (resizeRendererToDisplaySize(renderer)) {
-      const canvas = renderer.domElement;
-      camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      camera.updateProjectionMatrix();
-    }
-
-    // controls.movementSpeed = 0.33 * d;
-    controls.update( delta );
-
-    // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
-    raycaster.setFromCamera( mouse, camera );
-
-    const intersects = raycaster.intersectObjects( scene.children );
-    
-    // If we have intersected things
-    if ( intersects.length > 0 ) {
-      
-      
-      // If we have intersected a new thing (closest)
-      if ( INTERSECTED != intersects[ 0 ].object ) {
-        // Store the last intersected thing
-        INTERSECTED = intersects[ 0 ].object;
-        console.log("setting intersect");
-        console.log(intersects[0]);
-      }
-
-    } 
-    // We intersected nothing, clear our store
-    else {
-
-      INTERSECTED = null;
-
-    }
-
-
-    renderer.render(scene, camera);
-
-    requestAnimationFrame(render);
-  }
-  window.requestAnimationFrame(render);
-  console.log("Outputting all objects in scene");
-  console.log(objects);
+  // Info panel - TODO
+  const infoPanel = document.querySelector('#info');
 }
 
-// Run main function loop
-main();
+function onWindowResize() {
+  const canvas = renderer.domElement;
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+}
+
+function onDocumentMouseDown(event) {
+  const et = event.target
+  const de = renderer.domElement;
+  // Appears to work better without offsets
+  // const trueX = (event.clientX - et.offsetLeft);
+  // const trueY = (event.clientY - et.offsetTop);
+  const trueX = event.clientX;
+  const trueY = event.clientY;
+  mouse.x = ( (trueX / de.clientWidth) * 2 - 1);
+  mouse.y = - (trueY / de.clientHeight) * 2 + 1;
+  console.log(de.clientWidth, de.clientHeight);
+  console.log(`${event.clientX}, ${et.offsetLeft}, position ${event.clientX - et.offsetLeft}, ${event.pageX}`);
+
+  // OG
+  // mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  // mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+  if(debug.objectSelection) console.log(`event click: ${event.clientX}, ${event.clientY}. mouse: ${mouse.x}, ${mouse.y}`);
+}
+
+function animate() {
+  requestAnimationFrame( animate );
+
+  render();
+}
+
+// Main render loop
+function render() {
+  // Time elapsed since last render
+  const delta = clock.getDelta();
+
+  // controls.movementSpeed = 0.33 * d;
+  controls.update( delta );
+  camera.updateMatrixWorld();
+
+  // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
+  raycaster.setFromCamera( mouse, camera );
+  const intersects = raycaster.intersectObjects( scene.children );
+  // If we have intersected things
+  if ( intersects.length > 0 ) {
+    // If we have intersected a new thing (closest)
+    if ( INTERSECTED != intersects[ 0 ].object ) {
+      // Store the last intersected thing
+      INTERSECTED = intersects[ 0 ].object;
+      if(debug.objectSelection) {
+        intersects[0].object.material.color.setHex(0x000000);
+      console.log(intersects[0]);
+      }
+    }
+  }
+  // We intersected nothing, clear our store
+  else {
+    INTERSECTED = null;
+  }
+  renderer.render(scene, camera);
+
+  // requestAnimationFrame(render);
+}
+
+
+// function main() {
+
+//   // Dynamic resizing/rendering
+//   function resizeRendererToDisplaySize(renderer) {
+//     const canvas = renderer.domElement;
+//     const width = canvas.clientWidth;
+//     const height = canvas.clientHeight;
+//     const needResize = canvas.width !== width || canvas.height !== height;
+//     if (needResize) {
+//       renderer.setSize(width, height, false);
+//     }
+//     return needResize;
+//   }
+
+  
+  
+  
+  
+
+//   // function onDocumentMouseDown( event ) 
+//   // {
+//   //   // the following line would stop any other event handler from firing
+//   //   // (such as the mouse's TrackballControls)
+//   //   // event.preventDefault();
+    
+//   //   // console.log(`Click.`);
+    
+//   //   // update the mouse variable
+//   //   // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+//   //   // mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+//   //   // console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
+
+//   //   // Calculates the offset of the window
+//   //   let et = event.target, de = renderer.domElement;
+//   //   let trueX = (event.pageX - et.offsetLeft);
+//   //   let trueY = (event.pageY - et.offsetTop);
+//   //   mouse.x = (((trueX / de.width) * 2) -1);
+//   //   mouse.y = (((trueY / de.height) * -2) +1);
+//   //   console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
+    
+//   //   // Raycasting
+//   //   raycaster.setFromCamera( mouse, camera );
+
+//   //   // const intersects = raycaster.intersectObjects( objects, recursiveFlag );
+//   //   const intersects = raycaster.intersectObjects( scene.children );
+    
+//   //   // find intersections
+
+//   //   // create a Ray with origin at the mouse position
+//   //   //   and direction into the scene (camera direction)
+//   //   // var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+//   //   // projector.unprojectVector( vector, camera );
+//   //   // var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+//   //   // // create an array containing all objects in the scene with which the ray intersects
+//   //   // var intersects = ray.intersectObjects( targetList );
+    
+//   //   // if there is one (or more) intersections
+//   //   if ( intersects.length > 0 )
+//   //   {
+//   //     console.log(intersects);
+//   //     console.log("Hit @ " + toString( intersects[0].point ) );
+//   //     intersects[0].object.material.color.setHex(0x000000);
+//   //   }
+
+//   // }
+
+
+  
+//   window.requestAnimationFrame(render);
+//   // console.log("Outputting all objects in scene");
+//   // console.log(objects);
+// }
+
+// // Run main function loop
+// main();

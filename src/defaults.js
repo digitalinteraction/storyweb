@@ -44,3 +44,7 @@ export const controlSettings = {
   autoForward: false,
   dragToLook: true,
 }
+
+export const debug = {
+  objectSelection: true,
+}

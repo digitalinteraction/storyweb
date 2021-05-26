@@ -1,28 +1,29 @@
 import nodes from './nodes.json';
-import { grid } from './defaults';
+// import { grid } from './defaults';
+import { settings as def } from './defaults';
 
-let edges = [];
+const edges = [];
 
 function mapConnection(id0, id1) {
-  // console.log(`comparing ${id0} and ${id1}`)
+  if (def.debug.edgeCalculation) console.log(`comparing ${id0} and ${id1}`);
   const checkIds = edges.filter((arr) => {
     if (arr.id0 === id0 && arr.id1 === id1) {
-      // console.log(`matching both in correct positions`);
+      if (def.debug.edgeCalculation) console.log('matching both in correct positions');
       return arr;
     }
     if (arr.id0 === id1 && arr.id1 === id0) {
-      // console.log(`matching both in opposite positions`);
+      if (def.debug.edgeCalculation) console.log('matching both in opposite positions');
       return arr;
     }
     return '';
   });
   if (checkIds.length === 0) {
-    // console.log('Didnt match anything, adding edge');
+    if (def.debug.edgeCalculation) console.log('Didnt match anything, adding edge');
     // If we don't find anything in the array
     edges.push({ id0, id1 });
   }
   // else {
-  //   // console.log("Did find this pair, ignoring");
+  //   if (def.debug.edgeCalculation) console.log('Did find this pair, ignoring');
   //   console.log(checkIds);
   // }
 }
@@ -54,9 +55,8 @@ function calculateConnections() {
 // }
 
 function calculateGrid() {
-  console.log('logging edges');
   calculateConnections();
-  console.log(edges);
+  if (def.debug.edgeCalculation) console.log(edges);
   return nodes;
 }
 

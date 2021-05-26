@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
-
-import { createMaterial } from './helpers';
+import { generateBoxMesh, generateEdgeMesh } from './helpers';
 import calculateGrid from './grid';
 import nodes from './nodes.json';
 import { settings as def } from './defaults';
+
+const TWEEN = require('@tweenjs/tween.js');
 // import GreySeal from './assets/greySealSkull.jpg';
 
 let camera;
@@ -14,6 +15,8 @@ let raycaster;
 let renderer;
 let listener;
 let INTERSECTED;
+
+let clickedObject = false;
 
 const mouse = new THREE.Vector2();
 const clock = new THREE.Clock();
@@ -38,6 +41,12 @@ function init() {
   // Not currently in use
   calculateGrid();
 
+  if (def.debug.axesHelper) {
+    const axesHelper = new THREE.AxesHelper(20);
+    axesHelper.position.set(-40, 0, -20);
+    scene.add(axesHelper);
+  }
+
   // Main grid
   const gridSize = 30;
   let grid = new Array(gridSize).fill(new Array(gridSize).fill(0));
@@ -49,27 +58,9 @@ function init() {
   light.position.set(def.light[0].x, def.light[0].y, def.light[0].z);
   scene.add(light);
 
-  // Add objects to scene
-  // Box geometry
-  // const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-  // const material = new THREE.MeshBasicMaterial({color: 0x44aa88});
-
   // Object & material creation
   let objects = []; // Array of objects
   // Could do with adding an array of edges as well
-
-  // function createMaterial() {
-  //   const material = new THREE.MeshPhongMaterial({
-  //     side: THREE.DoubleSide,
-  //   });
-
-  //   const hue = Math.random();
-  //   const saturation = 1;
-  //   const luminance = .5;
-  //   material.color.setHSL(hue, saturation, luminance);
-
-  //   return material;
-  // }
 
   function addObject(x, y, obj) {
     // eslint-disable-next-line no-param-reassign
@@ -81,32 +72,8 @@ function init() {
     objects.push(obj);
   }
 
-  function addSolidGeometry(x, y, geometry) {
-    const mesh = new THREE.Mesh(geometry, createMaterial());
-    addObject(x, y, mesh);
-  }
-
-  function addPlaneGeometry(x, y, material) {
-    const loader = new THREE.TextureLoader();
-    const planeMaterial = new THREE.MeshBasicMaterial({
-      // These are loaded from the dist folder
-      // TODO not sure how to set up with webpack better?
-      map: loader.load(material),
-    });
-    const planeGeometry = new THREE.PlaneGeometry(9, 9);
-    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-    addObject(x, y, planeMesh);
-  }
-
   function addBoxGeometry(x, y, material, name, sound) {
-    const loader = new THREE.TextureLoader();
-    const boxMaterial = new THREE.MeshBasicMaterial({
-      // These are loaded from the dist folder
-      // TODO not sure how to set up with webpack better?
-      map: loader.load(material),
-    });
-    const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
-    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    const boxMesh = generateBoxMesh(material);
     boxMesh.name = name;
     addObject(x, y, boxMesh);
 
@@ -127,15 +94,7 @@ function init() {
 
   // Could also use TubeGeometry to make this, could be a bit more organic
   function addEdgeGeometry(x, y) {
-    // Test cylinder (edge)
-    const radiusTop = 0.5;
-    const radiusBottom = 0.5;
-    const height = 70;
-    const radialSegments = 12;
-    const mesh = new THREE.Mesh(
-      new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments),
-      createMaterial(),
-    );
+    const mesh = generateEdgeMesh();
     mesh.rotation.x = 1.57; // In radians
     mesh.rotation.z = -0.7;
 
@@ -176,11 +135,6 @@ function init() {
   function initGrid() {
     nodes.forEach((node) => {
       // Position is subtracted 15 to get back to origin
-      // addSolidGeometry(
-      //   (node.position[0]) - 15,
-      //   (node.position[1]) - 15,
-      //   new THREE.DodecahedronGeometry(def.sphere.radius, def.sphere.detail),
-      // );
       addBoxGeometry(
         (node.position[0]) - 15,
         (node.position[1]) - 15,
@@ -216,7 +170,7 @@ function init() {
   controls.dragToLook = def.control.dragToLook;
 
   // Event listener for mouse
-  document.addEventListener('mousedown', onDocumentMouseDown, false);
+  document.addEventListener('mouseup', onDocumentMouseUp, false);
 
   // Event listener for resize
   window.addEventListener('resize', onWindowResize);
@@ -232,22 +186,24 @@ function onWindowResize() {
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 }
 
-function onDocumentMouseDown(event) {
-  const et = event.target;
-  const de = renderer.domElement;
-  // Appears to work better without offsets
-  // const trueX = (event.clientX - et.offsetLeft);
-  // const trueY = (event.clientY - et.offsetTop);
-  const trueX = event.clientX;
-  const trueY = event.clientY;
-  mouse.x = ((trueX / de.clientWidth) * 2 - 1);
-  mouse.y = -(trueY / de.clientHeight) * 2 + 1;
-  console.log(de.clientWidth, de.clientHeight);
-  console.log(`${event.clientX}, ${et.offsetLeft}, position ${event.clientX - et.offsetLeft}, ${event.pageX}`);
+function onDocumentMouseUp(event) {
+  console.log('clicked');
+  clickedObject = true;
+  // const et = event.target;
+  // const de = renderer.domElement;
+  // // Appears to work better without offsets
+  // // const trueX = (event.clientX - et.offsetLeft);
+  // // const trueY = (event.clientY - et.offsetTop);
+  // const trueX = event.clientX;
+  // const trueY = event.clientY;
+  // mouse.x = ((trueX / de.clientWidth) * 2 - 1);
+  // mouse.y = -(trueY / de.clientHeight) * 2 + 1;
+  // console.log(de.clientWidth, de.clientHeight);
+  // console.log(`${event.clientX}, ${et.offsetLeft}, position ${event.clientX - et.offsetLeft}, ${event.pageX}`);
 
   // OG
-  // mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  // mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+  mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
 
   if (def.debug.objectSelection) console.log(`event click: ${event.clientX}, ${event.clientY}. mouse: ${mouse.x}, ${mouse.y}`);
 }
@@ -261,24 +217,44 @@ function render() {
   controls.update(delta);
   camera.updateMatrixWorld();
 
+  TWEEN.update();
+
   // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(scene.children);
-  // If we have intersected things
-  if (intersects.length > 0) {
-    // If we have intersected a new thing (closest)
-    if (INTERSECTED !== intersects[0].object) {
-      // Store the last intersected thing
-      INTERSECTED = intersects[0].object;
-      if (def.debug.objectSelection) {
-        intersects[0].object.material.color.setHex(0x000000);
-        console.log(intersects[0]);
+  if (clickedObject) {
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children);
+    // If we have intersected things
+    if (intersects.length > 0) {
+      // If we have intersected a new thing (closest)
+      if (INTERSECTED !== intersects[0].object) {
+        // Store the last intersected thing
+        INTERSECTED = intersects[0].object;
+
+
+        if (def.debug.goToObject) {
+          const { x, y, z } = intersects[0].object.position;
+          new TWEEN.Tween(camera.position)
+            .to({
+              x,
+              y: y + 10,
+              z: z + 20,
+            }, 500)
+            .start();
+          console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`)
+        }
+
+        if (def.debug.objectSelection) {
+          intersects[0].object.material.color.setHex(0x000000);
+          console.log(intersects[0]);
+        }
       }
+    } else {
+      // We intersected nothing, clear our store
+      INTERSECTED = null;
     }
-  } else {
-    // We intersected nothing, clear our store
-    INTERSECTED = null;
+    clickedObject = false;
   }
+
   renderer.render(scene, camera);
 
   // requestAnimationFrame(render);

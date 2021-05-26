@@ -28,14 +28,23 @@ export const settings = {
     radius: 5,
     detail: 4,
   },
+  edge: {
+    radiusTop: 0.5,
+    radiusBottom: 0.5,
+    height: 70,
+    radialSegments: 12,
+  },
   control: {
     movSpeed: 30,
-    rollSpeed: Math.PI / 24,
+    rollSpeed: Math.PI / 12,
     autoForward: false,
     dragToLook: true,
   },
   debug: {
     objectSelection: false,
+    goToObject: true,
+    edgeCalculation: false,
+    axesHelper: true,
   },
   sound: {
     refDistance: 5,

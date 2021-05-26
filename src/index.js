@@ -9,6 +9,7 @@ import { cameraSettings, sceneSettings, lightSettings, sphereSettings, gridSetti
 // import GreySeal from './assets/greySealSkull.jpg';
 
 let camera, scene, controls, raycaster, renderer;
+let listener;
 let INTERSECTED;
 
 let mouse = new THREE.Vector2(); 
@@ -27,9 +28,11 @@ function init() {
   const near = cameraSettings.near;
   const far = cameraSettings.far;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.x = cameraSettings.startX;
-  camera.position.z = cameraSettings.startZ;
-  camera.position.y = cameraSettings.startY;
+  camera.position.set(cameraSettings.startX, cameraSettings.startY, cameraSettings.startZ);
+
+  listener = new THREE.AudioListener();
+  camera.add(listener);
+  
 
   // Init scene
   scene = new THREE.Scene();
@@ -105,7 +108,7 @@ function init() {
     addObject(x, y, planeMesh);
   }
 
-  function addBoxGeometry(x, y, material, name) {
+  function addBoxGeometry(x, y, material, name, sound) {
     const loader = new THREE.TextureLoader();
     const boxMaterial = new THREE.MeshBasicMaterial({
       // These are loaded from the dist folder
@@ -117,7 +120,25 @@ function init() {
     const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
     const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
     boxMesh.name = name;
-    addObject(x, y, boxMesh);
+    boxMesh.position.x = x * gridSettings.spread;
+    boxMesh.position.z = y * gridSettings.spread;
+
+    scene.add(boxMesh);
+    objects.push(boxMesh);
+    switch(sound) {
+      case "seal002":
+        console.log(sound);
+        boxMesh.add(sound1);
+        break;
+      case "seal003": 
+        console.log(sound);
+        boxMesh.add(sound2);
+        break;
+      default:
+        console.log("no sound");
+    }
+    // if(sound) boxMesh.add(sound);
+    // addObject(x, y, boxMesh);
   }
 
   // Could also use TubeGeometry to make this, could be a bit more organic
@@ -140,7 +161,26 @@ function init() {
   const radius = sphereSettings.radius;  
   const detail = sphereSettings.detail;
 
- 
+  const audioLoader = new THREE.AudioLoader();
+
+  const sound1 = new THREE.PositionalAudio(listener);
+  audioLoader.load('./assets/sounds/example-376737_Skullbeatz___Bad_Cat_Maste.mp3', function(buffer) {
+    sound1.setBuffer(buffer);
+    sound1.setRefDistance(5);
+    sound1.play();
+  });
+
+  // Add to a mesh
+
+
+  const sound2 = new THREE.PositionalAudio(listener);
+  audioLoader.load('./assets/sounds/example-358232_j_s_song.mp3', function(buffer) {
+    sound2.setBuffer(buffer);
+    sound2.setRefDistance(5);
+    sound2.play();
+  });
+
+  // Add to a mesh
 
   // Iterate through grid, when we find an object, add it to the geometry
   // TODO
@@ -148,7 +188,7 @@ function init() {
     nodes.forEach(node => {
       // Position is subtracted 15 to get back to origin
       // addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
-      addBoxGeometry((node.position[0])-15, (node.position[1])-15, node.image, node.name);
+      addBoxGeometry((node.position[0])-15, (node.position[1])-15, node.image, node.name, node.sound);
     })
 
   }
@@ -254,81 +294,3 @@ function render() {
 
   // requestAnimationFrame(render);
 }
-
-
-// function main() {
-
-//   // Dynamic resizing/rendering
-//   function resizeRendererToDisplaySize(renderer) {
-//     const canvas = renderer.domElement;
-//     const width = canvas.clientWidth;
-//     const height = canvas.clientHeight;
-//     const needResize = canvas.width !== width || canvas.height !== height;
-//     if (needResize) {
-//       renderer.setSize(width, height, false);
-//     }
-//     return needResize;
-//   }
-
-  
-  
-  
-  
-
-//   // function onDocumentMouseDown( event ) 
-//   // {
-//   //   // the following line would stop any other event handler from firing
-//   //   // (such as the mouse's TrackballControls)
-//   //   // event.preventDefault();
-    
-//   //   // console.log(`Click.`);
-    
-//   //   // update the mouse variable
-//   //   // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-//   //   // mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-//   //   // console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
-
-//   //   // Calculates the offset of the window
-//   //   let et = event.target, de = renderer.domElement;
-//   //   let trueX = (event.pageX - et.offsetLeft);
-//   //   let trueY = (event.pageY - et.offsetTop);
-//   //   mouse.x = (((trueX / de.width) * 2) -1);
-//   //   mouse.y = (((trueY / de.height) * -2) +1);
-//   //   console.log(`Click. W:${mouse.x}, H:${mouse.y}`);
-    
-//   //   // Raycasting
-//   //   raycaster.setFromCamera( mouse, camera );
-
-//   //   // const intersects = raycaster.intersectObjects( objects, recursiveFlag );
-//   //   const intersects = raycaster.intersectObjects( scene.children );
-    
-//   //   // find intersections
-
-//   //   // create a Ray with origin at the mouse position
-//   //   //   and direction into the scene (camera direction)
-//   //   // var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-//   //   // projector.unprojectVector( vector, camera );
-//   //   // var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-
-//   //   // // create an array containing all objects in the scene with which the ray intersects
-//   //   // var intersects = ray.intersectObjects( targetList );
-    
-//   //   // if there is one (or more) intersections
-//   //   if ( intersects.length > 0 )
-//   //   {
-//   //     console.log(intersects);
-//   //     console.log("Hit @ " + toString( intersects[0].point ) );
-//   //     intersects[0].object.material.color.setHex(0x000000);
-//   //   }
-
-//   // }
-
-
-  
-//   window.requestAnimationFrame(render);
-//   // console.log("Outputting all objects in scene");
-//   // console.log(objects);
-// }
-
-// // Run main function loop
-// main();

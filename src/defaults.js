@@ -46,5 +46,5 @@ export const controlSettings = {
 }
 
 export const debug = {
-  objectSelection: true,
+  objectSelection: false,
 }

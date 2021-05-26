@@ -7,7 +7,20 @@ export function createMaterial() {
 
   const hue = Math.random();
   const saturation = 1;
-  const luminance = .5;
+  const luminance = 0.5;
+  material.color.setHSL(hue, saturation, luminance);
+
+  return material;
+}
+
+export function createPhongMaterial() {
+  const material = new THREE.MeshPhongMaterial({
+    side: THREE.DoubleSide,
+  });
+
+  const hue = Math.random();
+  const saturation = 1;
+  const luminance = 0.5;
   material.color.setHSL(hue, saturation, luminance);
 
   return material;

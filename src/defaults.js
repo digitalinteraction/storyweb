@@ -1,6 +1,6 @@
 export const settings = {
   scene: {
-    backgroundColor: 0xA0A0A0
+    backgroundColor: 0xA0A0A0,
   },
   camera: {
     fov: 90,
@@ -17,8 +17,8 @@ export const settings = {
       intensity: 0.75,
       x: -1,
       y: 2,
-      z: 100, 
-    }
+      z: 100,
+    },
   ],
   grid: {
     size: 30,
@@ -40,19 +40,11 @@ export const settings = {
   sound: {
     refDistance: 5,
   },
-}
+};
 
 export const grid = {
   empty: new Array(settings.grid.size).fill(new Array(settings.grid.size).fill(0)),
-}
-
-// export const sceneSettings = {
-  
-// }
-
-// export const cameraSettings = {
-  
-// }
+};
 
 // // Lighting
 // export const lightSettings = [
@@ -62,7 +54,7 @@ export const grid = {
 //     intensity: 0.75,
 //     x: -1,
 //     y: 2,
-//     z: 100, 
+//     z: 100,
 //   }
 // ]
 
@@ -71,7 +63,6 @@ export const grid = {
 //   size: 30,
 //   spread: 40,
 // }
-
 
 // export const sphereSettings = {
 //   radius: 5,

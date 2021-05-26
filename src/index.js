@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
+import { createMaterial } from './helpers';
 import calculateGrid  from './grid';
 import nodes from './nodes.json';
 // import { 
@@ -31,19 +32,13 @@ init();
 animate();
 
 function init() {
-  
-
   // Camera
-  const fov = def.camera.fov;
-  const aspect = window.innerWidth / window.innerHeight;
-  const near = def.camera.near;
-  const far = def.camera.far;
-  camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera = new THREE.PerspectiveCamera(def.camera.fov, (window.innerWidth / window.innerHeight), def.camera.near, def.camera.far);
   camera.position.set(def.camera.startX, def.camera.startY, def.camera.startZ);
 
+  // Audio listener
   listener = new THREE.AudioListener();
   camera.add(listener);
-  
 
   // Init scene
   scene = new THREE.Scene();
@@ -57,7 +52,7 @@ function init() {
   let grid = new Array(gridSize).fill(new Array(gridSize).fill(0));
 
   // Lighting
-  // Add an iterator here for multiple lights (def.light is an array)
+  // Todo: Add an iterator here for multiple lights (def.light is an array)
   {
     const color = def.light[0].color;
     const intensity = def.light[0].intensity;
@@ -79,18 +74,18 @@ function init() {
   // Could do with adding an array of edges as well
   const spread = 15;
 
-  function createMaterial() {
-    const material = new THREE.MeshPhongMaterial({
-      side: THREE.DoubleSide,
-    });
+  // function createMaterial() {
+  //   const material = new THREE.MeshPhongMaterial({
+  //     side: THREE.DoubleSide,
+  //   });
 
-    const hue = Math.random();
-    const saturation = 1;
-    const luminance = .5;
-    material.color.setHSL(hue, saturation, luminance);
+  //   const hue = Math.random();
+  //   const saturation = 1;
+  //   const luminance = .5;
+  //   material.color.setHSL(hue, saturation, luminance);
 
-    return material;
-  }
+  //   return material;
+  // }
 
   function addObject(x, y, obj) {
     obj.position.x = x * def.grid.spread;
@@ -111,8 +106,6 @@ function init() {
       // These are loaded from the dist folder
       // TODO not sure how to set up with webpack better?
       map: loader.load(material),
-      // map: loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg'),
-      // color: 0xFF8844,
     })
     const planeGeometry = new THREE.PlaneGeometry(9, 9);
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -125,17 +118,12 @@ function init() {
       // These are loaded from the dist folder
       // TODO not sure how to set up with webpack better?
       map: loader.load(material),
-      // map: loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg'),
-      // color: 0xFF8844,
     })
     const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
     const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
     boxMesh.name = name;
-    boxMesh.position.x = x * def.grid.spread;
-    boxMesh.position.z = y * def.grid.spread;
+    addObject(x, y, boxMesh);
 
-    scene.add(boxMesh);
-    objects.push(boxMesh);
     switch(sound) {
       case "waterlappingfarneislands":
         boxMesh.add(sound1);
@@ -145,15 +133,11 @@ function init() {
         break;
       case "familiesatbeach":
         boxMesh.add(sound3);
-      default:
-        console.log("no sound");
+        break;
     }
-    // if(sound) boxMesh.add(sound);
-    // addObject(x, y, boxMesh);
   }
 
   // Could also use TubeGeometry to make this, could be a bit more organic
-
   function addEdgeGeometry(x, y) {
     // Test cylinder (edge)
     const radiusTop = 0.5;
@@ -178,6 +162,7 @@ function init() {
   audioLoader.load('./assets/sounds/waterlappingfarneislands.mp3', function(buffer) {
     sound1.setBuffer(buffer);
     sound1.setRefDistance(5);
+    sound1.setLoop(true);
     sound1.play();
   });
 
@@ -185,6 +170,7 @@ function init() {
   audioLoader.load('./assets/sounds/sealsvocalising.mp3', function(buffer) {
     sound2.setBuffer(buffer);
     sound2.setRefDistance(5);
+    sound2.setLoop(true);
     sound2.play();
   });
 
@@ -192,6 +178,7 @@ function init() {
   audioLoader.load('./assets/sounds/familiesatbeach.mp3', function(buffer) {
     sound3.setBuffer(buffer);
     sound3.setRefDistance(5);
+    sound3.setLoop(true);
     sound3.play();
   });
 

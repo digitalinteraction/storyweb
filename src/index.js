@@ -239,7 +239,11 @@ function render() {
               y: y + 10,
               z: z + 20,
             }, 500)
-            .start();
+            .start()
+            .onComplete(() => {
+              // TODO: Orient the camera towards the middle of the web
+              // camera.lookAt(scene.position);
+            });
           console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`)
         }
 

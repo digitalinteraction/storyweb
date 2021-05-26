@@ -4,7 +4,18 @@ import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
 import calculateGrid  from './grid';
 import nodes from './nodes.json';
-import { cameraSettings, sceneSettings, lightSettings, sphereSettings, gridSettings, controlSettings, debug } from './defaults';
+// import { 
+//   cameraSettings, 
+//   sceneSettings, 
+//   def.light, 
+//   def.sphere, 
+//   def.grid, 
+//   def.control, 
+//   def.sound,
+//   def.debug 
+// } from './defaults';
+
+import { settings as def }  from './defaults';
 
 // import GreySeal from './assets/greySealSkull.jpg';
 
@@ -23,12 +34,12 @@ function init() {
   
 
   // Camera
-  const fov = cameraSettings.fov;
+  const fov = def.camera.fov;
   const aspect = window.innerWidth / window.innerHeight;
-  const near = cameraSettings.near;
-  const far = cameraSettings.far;
+  const near = def.camera.near;
+  const far = def.camera.far;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(cameraSettings.startX, cameraSettings.startY, cameraSettings.startZ);
+  camera.position.set(def.camera.startX, def.camera.startY, def.camera.startZ);
 
   listener = new THREE.AudioListener();
   camera.add(listener);
@@ -36,7 +47,7 @@ function init() {
 
   // Init scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(sceneSettings.backgroundColor);
+  scene.background = new THREE.Color(def.scene.backgroundColor);
 
   // Not currently in use
   calculateGrid();
@@ -46,12 +57,12 @@ function init() {
   let grid = new Array(gridSize).fill(new Array(gridSize).fill(0));
 
   // Lighting
-  // Add an iterator here for multiple lights (lightSettings is an array)
+  // Add an iterator here for multiple lights (def.light is an array)
   {
-    const color = lightSettings[0].color;
-    const intensity = lightSettings[0].intensity;
+    const color = def.light[0].color;
+    const intensity = def.light[0].intensity;
     const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(lightSettings[0].x, lightSettings[0].y, lightSettings[0].z);
+    light.position.set(def.light[0].x, def.light[0].y, def.light[0].z);
     scene.add(light);
   }
 
@@ -82,8 +93,8 @@ function init() {
   }
 
   function addObject(x, y, obj) {
-    obj.position.x = x * gridSettings.spread;
-    obj.position.z = y * gridSettings.spread;
+    obj.position.x = x * def.grid.spread;
+    obj.position.z = y * def.grid.spread;
 
     scene.add(obj);
     objects.push(obj);
@@ -120,20 +131,20 @@ function init() {
     const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
     const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
     boxMesh.name = name;
-    boxMesh.position.x = x * gridSettings.spread;
-    boxMesh.position.z = y * gridSettings.spread;
+    boxMesh.position.x = x * def.grid.spread;
+    boxMesh.position.z = y * def.grid.spread;
 
     scene.add(boxMesh);
     objects.push(boxMesh);
     switch(sound) {
-      case "seal002":
-        console.log(sound);
+      case "waterlappingfarneislands":
         boxMesh.add(sound1);
         break;
-      case "seal003": 
-        console.log(sound);
+      case "sealsvocalising": 
         boxMesh.add(sound2);
         break;
+      case "familiesatbeach":
+        boxMesh.add(sound3);
       default:
         console.log("no sound");
     }
@@ -158,36 +169,39 @@ function init() {
   }
 
   // Sphere props
-  const radius = sphereSettings.radius;  
-  const detail = sphereSettings.detail;
+  const radius = def.sphere.radius;  
+  const detail = def.sphere.detail;
 
   const audioLoader = new THREE.AudioLoader();
 
   const sound1 = new THREE.PositionalAudio(listener);
-  audioLoader.load('./assets/sounds/example-376737_Skullbeatz___Bad_Cat_Maste.mp3', function(buffer) {
+  audioLoader.load('./assets/sounds/waterlappingfarneislands.mp3', function(buffer) {
     sound1.setBuffer(buffer);
     sound1.setRefDistance(5);
     sound1.play();
   });
 
-  // Add to a mesh
-
-
   const sound2 = new THREE.PositionalAudio(listener);
-  audioLoader.load('./assets/sounds/example-358232_j_s_song.mp3', function(buffer) {
+  audioLoader.load('./assets/sounds/sealsvocalising.mp3', function(buffer) {
     sound2.setBuffer(buffer);
     sound2.setRefDistance(5);
     sound2.play();
   });
 
-  // Add to a mesh
+  const sound3 = new THREE.PositionalAudio(listener);
+  audioLoader.load('./assets/sounds/familiesatbeach.mp3', function(buffer) {
+    sound3.setBuffer(buffer);
+    sound3.setRefDistance(5);
+    sound3.play();
+  });
+
 
   // Iterate through grid, when we find an object, add it to the geometry
   // TODO
   function initGrid() {
     nodes.forEach(node => {
       // Position is subtracted 15 to get back to origin
-      // addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(sphereSettings.radius, sphereSettings.detail));
+      // addSolidGeometry((node.position[0])-15, (node.position[1])-15, new THREE.DodecahedronGeometry(def.sphere.radius, def.sphere.detail));
       addBoxGeometry((node.position[0])-15, (node.position[1])-15, node.image, node.name, node.sound);
     })
 
@@ -213,11 +227,11 @@ function init() {
   // Controls
   controls = new FlyControls( camera, renderer.domElement );
 
-  controls.movementSpeed = controlSettings.movSpeed;
+  controls.movementSpeed = def.control.movSpeed;
   controls.domElement = renderer.domElement;
-  controls.rollSpeed = controlSettings.rollSpeed;
-  controls.autoForward = controlSettings.autoForward;
-  controls.dragToLook = controlSettings.dragToLook;
+  controls.rollSpeed = def.control.rollSpeed;
+  controls.autoForward = def.control.autoForward;
+  controls.dragToLook = def.control.dragToLook;
 
   // Event listener for mouse
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -253,7 +267,7 @@ function onDocumentMouseDown(event) {
   // mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   // mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-  if(debug.objectSelection) console.log(`event click: ${event.clientX}, ${event.clientY}. mouse: ${mouse.x}, ${mouse.y}`);
+  if(def.debug.objectSelection) console.log(`event click: ${event.clientX}, ${event.clientY}. mouse: ${mouse.x}, ${mouse.y}`);
 }
 
 function animate() {
@@ -280,7 +294,7 @@ function render() {
     if ( INTERSECTED != intersects[ 0 ].object ) {
       // Store the last intersected thing
       INTERSECTED = intersects[ 0 ].object;
-      if(debug.objectSelection) {
+      if(def.debug.objectSelection) {
         intersects[0].object.material.color.setHex(0x000000);
       console.log(intersects[0]);
       }

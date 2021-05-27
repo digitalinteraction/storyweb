@@ -1,4 +1,4 @@
-const path = require('path');
+// const path = require('path');
 
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
@@ -19,8 +19,8 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           //  without additional settings, this will reference a .babelrc
-          loader: 'babel-loader'
-        }
+          loader: 'babel-loader',
+        },
       },
       {
 
@@ -29,12 +29,12 @@ module.exports = {
         type: 'asset/resource',
 
       },
-    ]
+    ],
   },
 
   devtool: 'source-map',
 
   devServer: {
-    contentBase: './dist'  // Can also be pointed to ./dist
-  }
-}
+    contentBase: './dist' // Can also be pointed to ./dist
+  },
+};

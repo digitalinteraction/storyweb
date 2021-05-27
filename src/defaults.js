@@ -1,14 +1,14 @@
 export const settings = {
   scene: {
-    backgroundColor: 0xA0A0A0,
+    backgroundColor: 0x202020,
   },
   camera: {
     fov: 90,
     near: 1,
     far: 1000,
-    startZ: 20,
-    startY: 10,
     startX: -40,
+    startY: 10,
+    startZ: 30,
   },
   light: [
     {
@@ -27,6 +27,11 @@ export const settings = {
   sphere: {
     radius: 5,
     detail: 4,
+  },
+  node: {
+    height: 12,
+    width: 12,
+    depth: 3.5,
   },
   edge: {
     radiusTop: 0.5,

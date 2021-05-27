@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
-import { generateBoxMesh, generateEdgeMesh, generatePlaneMesh } from './helpers';
+import { Line2 } from 'three/examples/jsm/lines/Line2';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
+import { createMaterial, generateBoxMesh, generateEdgeMesh, generatePlaneMesh } from './helpers';
 import calculateGrid from './grid';
 import nodes from './nodes.json';
 import { settings as def } from './defaults';
@@ -44,7 +48,7 @@ function init() {
 
   if (def.debug.axesHelper) {
     const axesHelper = new THREE.AxesHelper(20);
-    axesHelper.position.set(-40, 0, -20);
+    axesHelper.position.set(-80, 0, 0);
     scene.add(axesHelper);
   }
 
@@ -67,14 +71,14 @@ function init() {
     // eslint-disable-next-line no-param-reassign
     obj.position.x = x * def.grid.spread;
     // eslint-disable-next-line no-param-reassign
-    obj.position.z = y * def.grid.spread;
+    obj.position.y = -(y * def.grid.spread);
 
     scene.add(obj);
     objects.push(obj);
   }
 
   function addBoxGeometry(x, y, material, name, sound) {
-    const boxMesh = generateBoxMesh(material, 9, 9, 9);
+    const boxMesh = generateBoxMesh(material, def.node.height, def.node.width, def.node.depth);
     boxMesh.name = name;
     addObject(x, y, boxMesh);
 
@@ -151,7 +155,85 @@ function init() {
   // Test object
   // addPlaneGeometry(0, 0, './assets/greysealskull.jpg');
 
-  addEdgeGeometry(-1.6, -0.69);
+  // addEdgeGeometry(-1.6, -0.69);
+  // Create tube edge (test)
+  // position of 2 items
+
+  
+  // // Positions (not working)
+  // const positions = [];
+  // // const point1 = new THREE.Vector3(0, 0, -50);
+  // // const point2 = new THREE.Vector3(0, 40, -50);
+  // // positions.push(point1.x, point1.y, point1.y);
+  // // positions.push(point2.x, point2.y, point2.y);
+  // // positions.push(point2.x, point2.y + 20, point2.y + -20);
+  // const path = [ new THREE.Vector3(-1, 1, 0), 
+  //   new THREE.Vector3(0, 1, 0), 
+  //   new THREE.Vector3(1, 1, 0),
+  //   new THREE.Vector3(2, 1, 0),
+  //   new THREE.Vector3(3, 1, 0)
+  // ];
+
+
+  // const colors = [];
+
+  // // const points = GeometryUtils.hilbert3D( new THREE.Vector3( 0, 0, 0 ), 2.0, 1, 0, 1, 2, 3, 4, 5, 6, 7 );
+
+  // const spline = new THREE.CatmullRomCurve3( path );
+  // const divisions = Math.round( 2 * path.length );
+  // const point = new THREE.Vector3();
+  // const color = new THREE.Color();
+
+  // for ( let i = 0, l = divisions; i < l; i ++ ) {
+
+  //   const t = i / l;
+
+  //   spline.getPoint( t, point );
+  //   positions.push( point.x, point.y, point.z );
+
+  //   color.setHSL( t, 1.0, 0.5 );
+  //   colors.push( color.r, color.g, color.b );
+
+  // }
+
+  // // Geometry
+  // const geometry = new LineGeometry();
+  // geometry.setPositions(positions);
+  // geometry.setColors(colors);
+
+  // const matLine = new LineMaterial( {
+
+  //   color: 0xffffff,
+  //   linewidth: 1, // in pixels
+  //   vertexColors: true,
+  //   // resolution:  // to be set by renderer, eventually
+  //   dashed: false,
+  //   alphaToCoverage: true,
+  // });
+
+  // const line = new Line2( geometry, matLine );
+  // line.computeLineDistances();
+  // line.scale.set( 0.1, 0.1, 0.1 );
+  // scene.add(line);
+
+  const path = [new THREE.Vector3(-1, 1, 0),
+    new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(1, 1, 0),
+    new THREE.Vector3(2, 1, 0),
+    new THREE.Vector3(3, 1, 0),
+  ];
+
+  const pathBase = new THREE.CatmullRomCurve3(path);
+  // const path = new CustomSinCurve(4);
+  const tubularSegments = 20;
+  const radius = 1;
+  const radialSegments = 8;
+  const closed = false;
+  const mesh = new THREE.Mesh(
+    new THREE.TubeGeometry(pathBase, tubularSegments, radius, radialSegments, closed),
+    createMaterial(),
+  );
+  addObject(2, -1, mesh);
 
   // Add background plane
   const backgroundMesh = generatePlaneMesh('./assets/background.png', 800, 400);
@@ -260,8 +342,8 @@ function render() {
             new TWEEN.Tween(camera.position)
               .to({
                 x,
-                y: y + 10,
-                z: z + 20,
+                y,
+                // z: z + 20,
               }, 1000)
               .start()
               .onComplete(() => {

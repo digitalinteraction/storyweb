@@ -54,10 +54,10 @@ function calculateConnections() {
 //   return initialGrid;
 // }
 
-function calculateGrid() {
+function calculateEdges() {
   calculateConnections();
   if (def.debug.edgeCalculation) console.log(edges);
-  return nodes;
+  return edges;
 }
 
-export default calculateGrid;
+export default calculateEdges;

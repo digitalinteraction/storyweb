@@ -5,7 +5,7 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
 import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
 import { createMaterial, generateBoxMesh, generateEdgeMesh, generatePlaneMesh } from './helpers';
-import calculateGrid from './grid';
+import calculateEdges from './grid';
 import nodes from './nodes.json';
 import { settings as def } from './defaults';
 
@@ -18,6 +18,7 @@ let controls;
 let raycaster;
 let renderer;
 let listener;
+let edges;
 let INTERSECTED;
 let selectedObject;
 
@@ -43,8 +44,7 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(def.scene.backgroundColor);
 
-  // Not currently in use
-  calculateGrid();
+  
 
   if (def.debug.axesHelper) {
     const axesHelper = new THREE.AxesHelper(20);
@@ -143,12 +143,53 @@ function init() {
       addBoxGeometry(
         (node.position[0]) - 15,
         (node.position[1]) - 15,
-        node.image, node.name, node.sound,
+        node.image, node.id, node.sound,
       );
     });
   }
 
   initGrid();
+
+  function findVectorsTwoObjects(object1Name, object2Name) {
+    // TODO Needs error checking if not found
+    const firstObj = scene.getObjectByName(object1Name);
+    const secondObj = scene.getObjectByName(object2Name);
+    const { x: x1, y: y1, z: z1 } = firstObj.position;
+    const { x: x2, y: y2, z: z2 } = secondObj.position;
+    const vectors = [
+      new THREE.Vector3(x1, y1, z1),
+      new THREE.Vector3(x2, y2, z2),
+    ];
+    return vectors;
+  }
+
+  function drawEdge(object1Name, object2Name) {
+    const vectors = findVectorsTwoObjects(object1Name, object2Name);
+    const path = [
+      vectors[0],
+      vectors[1],
+    ];
+
+    const pathBase = new THREE.CatmullRomCurve3(path);
+    // const path = new CustomSinCurve(4);
+    const tubularSegments = 20;
+    const radius = 1;
+    const radialSegments = 8;
+    const closed = false;
+    const mesh = new THREE.Mesh(
+      new THREE.TubeGeometry(pathBase, tubularSegments, radius, radialSegments, closed),
+      createMaterial(),
+    );
+    addObject(0, 0, mesh);
+  }
+
+  // Generate edges
+  edges = calculateEdges();
+  // console.log(edges);
+  for (let i = 0; i < edges.length; i += 1) {
+    const { id0, id1 } = edges[i];
+    drawEdge(id0, id1);
+  }
 
   // Test shape
   // addSolidGeometry(-4, 0, new THREE.DodecahedronGeometry(radius, detail));
@@ -216,27 +257,10 @@ function init() {
   // line.scale.set( 0.1, 0.1, 0.1 );
   // scene.add(line);
 
-  const path = [new THREE.Vector3(-1, 1, 0),
-    new THREE.Vector3(0, 1, 0),
-    new THREE.Vector3(1, 1, 0),
-    new THREE.Vector3(2, 1, 0),
-    new THREE.Vector3(3, 1, 0),
-  ];
-
-  const pathBase = new THREE.CatmullRomCurve3(path);
-  // const path = new CustomSinCurve(4);
-  const tubularSegments = 20;
-  const radius = 1;
-  const radialSegments = 8;
-  const closed = false;
-  const mesh = new THREE.Mesh(
-    new THREE.TubeGeometry(pathBase, tubularSegments, radius, radialSegments, closed),
-    createMaterial(),
-  );
-  addObject(2, -1, mesh);
+  drawEdge(0, 1);
 
   // Add background plane
-  const backgroundMesh = generatePlaneMesh('./assets/background.png', 800, 400);
+  const backgroundMesh = generatePlaneMesh('./assets/background.png', def.background.width, def.background.height);
   backgroundMesh.position.z = -100;
   scene.add(backgroundMesh);
   objects.push(backgroundMesh);

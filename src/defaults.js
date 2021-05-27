@@ -8,7 +8,7 @@ export const settings = {
     far: 1000,
     startX: -40,
     startY: 10,
-    startZ: 30,
+    startZ: 50,
   },
   light: [
     {
@@ -38,6 +38,10 @@ export const settings = {
     radiusBottom: 0.5,
     height: 70,
     radialSegments: 12,
+  },
+  background: {
+    height: 800,
+    width: 1600,
   },
   control: {
     movSpeed: 30,

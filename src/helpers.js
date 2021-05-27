@@ -31,25 +31,28 @@ export function generateSolidMesh(geometry) {
   return new THREE.Mesh(geometry, createMaterial());
 }
 
-export function generatePlaneMesh(material) {
+export function generatePlaneMesh(material, sizeX, sizeY) {
   const loader = new THREE.TextureLoader();
   const planeMaterial = new THREE.MeshBasicMaterial({
     // These are loaded from the dist folder
     // TODO not sure how to set up with webpack better?
     map: loader.load(material),
   });
-  const planeGeometry = new THREE.PlaneGeometry(9, 9);
+  const planeGeometry = new THREE.PlaneGeometry(sizeX, sizeY);
   return new THREE.Mesh(planeGeometry, planeMaterial);
 }
 
-export function generateBoxMesh(material) {
+export function generateBoxMesh(material, sizeX, sizeY, sizeZ) {
   const loader = new THREE.TextureLoader();
-  const boxMaterial = new THREE.MeshBasicMaterial({
-    // These are loaded from the dist folder
-    // TODO not sure how to set up with webpack better?
+  const boxMaterial = new THREE.MeshLambertMaterial({
     map: loader.load(material),
   });
-  const boxGeometry = new THREE.BoxGeometry(9, 9, 9);
+  // const boxMaterial = new THREE.MeshBasicMaterial({
+  //   // These are loaded from the dist folder
+  //   // TODO not sure how to set up with webpack better?
+  //   map: loader.load(material),
+  // });
+  const boxGeometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
   return new THREE.Mesh(boxGeometry, boxMaterial);
 }
 

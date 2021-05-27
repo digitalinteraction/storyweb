@@ -14,7 +14,7 @@ export const settings = {
     {
       id: 0,
       color: 0xFFFFFF,
-      intensity: 0.75,
+      intensity: 0.9,
       x: -1,
       y: 2,
       z: 100,
@@ -43,6 +43,7 @@ export const settings = {
   debug: {
     objectSelection: false,
     goToObject: true,
+    highlightSelection: true,
     edgeCalculation: false,
     axesHelper: true,
   },

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
-import { generateBoxMesh, generateEdgeMesh } from './helpers';
+import { generateBoxMesh, generateEdgeMesh, generatePlaneMesh } from './helpers';
 import calculateGrid from './grid';
 import nodes from './nodes.json';
 import { settings as def } from './defaults';
@@ -15,6 +15,7 @@ let raycaster;
 let renderer;
 let listener;
 let INTERSECTED;
+let selectedObject;
 
 let clickedObject = false;
 
@@ -73,7 +74,7 @@ function init() {
   }
 
   function addBoxGeometry(x, y, material, name, sound) {
-    const boxMesh = generateBoxMesh(material);
+    const boxMesh = generateBoxMesh(material, 9, 9, 9);
     boxMesh.name = name;
     addObject(x, y, boxMesh);
 
@@ -152,6 +153,12 @@ function init() {
 
   addEdgeGeometry(-1.6, -0.69);
 
+  // Add background plane
+  const backgroundMesh = generatePlaneMesh('./assets/background.png', 800, 400);
+  backgroundMesh.position.z = -100;
+  scene.add(backgroundMesh);
+  objects.push(backgroundMesh);
+
   raycaster = new THREE.Raycaster();
 
   // Setup renderer
@@ -223,37 +230,59 @@ function render() {
   if (clickedObject) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
+
+    // object.geometry.type === "BoxGeometry"
+
     // If we have intersected things
     if (intersects.length > 0) {
       // If we have intersected a new thing (closest)
       if (INTERSECTED !== intersects[0].object) {
-        // Store the last intersected thing
-        INTERSECTED = intersects[0].object;
+        // console.log(INTERSECTED, intersects[0].object);
 
+        // Only want to select boxGeometry (crude check for now)
+        if (intersects[0].object.geometry.type === 'BoxGeometry') {
+          console.log('selected box');
 
-        if (def.debug.goToObject) {
-          const { x, y, z } = intersects[0].object.position;
-          new TWEEN.Tween(camera.position)
-            .to({
-              x,
-              y: y + 10,
-              z: z + 20,
-            }, 500)
-            .start()
-            .onComplete(() => {
-              // TODO: Orient the camera towards the middle of the web
-              // camera.lookAt(scene.position);
-            });
-          console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`)
-        }
+          console.log(`checking intersected ${INTERSECTED}`);
+          if (selectedObject && def.debug.highlightSelection) {
+            console.log('removing old colouring');
+            selectedObject.material.emissive.setHex(0x000000);
+          }
+          // Store the last intersected thing
+          INTERSECTED = intersects[0].object;
+          selectedObject = intersects[0].object;
 
-        if (def.debug.objectSelection) {
-          intersects[0].object.material.color.setHex(0x000000);
-          console.log(intersects[0]);
+          console.log(`intersected set to ${selectedObject}`);
+
+          // Go to objects position
+          if (def.debug.goToObject) {
+            const { x, y, z } = intersects[0].object.position;
+            new TWEEN.Tween(camera.position)
+              .to({
+                x,
+                y: y + 10,
+                z: z + 20,
+              }, 1000)
+              .start()
+              .onComplete(() => {
+                // TODO: Orient the camera towards the middle of the web
+                // camera.lookAt(scene.position);
+              });
+            console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`);
+          }
+          if (def.debug.highlightSelection) {
+            selectedObject.material.emissive.setHex(0x0000dd);
+          }
+
+          if (def.debug.objectSelection) {
+            // intersects[0].object.material.color.setHex(0x000000); // Set to black
+            console.log(intersects[0]);
+          }
         }
       }
     } else {
       // We intersected nothing, clear our store
+      // This is causing the problem with object highlighting
       INTERSECTED = null;
     }
     clickedObject = false;

@@ -50,9 +50,10 @@ export const settings = {
     dragToLook: true,
   },
   debug: {
+    clickEvent: false,
     objectSelection: false,
-    goToObject: true,
-    highlightSelection: true,
+    goToObject: false,
+    highlightSelection: false,
     edgeCalculation: false,
     axesHelper: true,
   },

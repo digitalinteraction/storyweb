@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
-import { Line2 } from 'three/examples/jsm/lines/Line2';
-import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
-import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
-import { GeometryUtils } from 'three/examples/jsm/utils/GeometryUtils';
-import { createMaterial, generateBoxMesh, generateEdgeMesh, generatePlaneMesh } from './helpers';
+import {
+  createMaterial,
+  generateBoxMesh,
+  generatePlaneMesh,
+} from './helpers';
 import calculateEdges from './grid';
 import nodes from './nodes.json';
+import { generateTemplate } from './nodesHelpers';
 import { settings as def } from './defaults';
 
 const TWEEN = require('@tweenjs/tween.js');
@@ -21,8 +22,9 @@ let listener;
 let edges;
 let INTERSECTED;
 let selectedObject;
+let infoPanel;
 
-let clickedObject = false;
+let eventClickedObject = false;
 
 const mouse = new THREE.Vector2();
 const clock = new THREE.Clock();
@@ -43,8 +45,6 @@ function init() {
   // Init scene
   scene = new THREE.Scene();
   scene.background = new THREE.Color(def.scene.backgroundColor);
-
-  
 
   if (def.debug.axesHelper) {
     const axesHelper = new THREE.AxesHelper(20);
@@ -96,18 +96,6 @@ function init() {
         break;
     }
   }
-
-  // Could also use TubeGeometry to make this, could be a bit more organic
-  function addEdgeGeometry(x, y) {
-    const mesh = generateEdgeMesh();
-    mesh.rotation.x = 1.57; // In radians
-    mesh.rotation.z = -0.7;
-
-    addObject(x, y, mesh);
-  }
-
-  // Sphere props
-  // const { radius, detail } = def.sphere;
 
   const audioLoader = new THREE.AudioLoader();
 
@@ -191,74 +179,6 @@ function init() {
     drawEdge(id0, id1);
   }
 
-  // Test shape
-  // addSolidGeometry(-4, 0, new THREE.DodecahedronGeometry(radius, detail));
-  // Test object
-  // addPlaneGeometry(0, 0, './assets/greysealskull.jpg');
-
-  // addEdgeGeometry(-1.6, -0.69);
-  // Create tube edge (test)
-  // position of 2 items
-
-  
-  // // Positions (not working)
-  // const positions = [];
-  // // const point1 = new THREE.Vector3(0, 0, -50);
-  // // const point2 = new THREE.Vector3(0, 40, -50);
-  // // positions.push(point1.x, point1.y, point1.y);
-  // // positions.push(point2.x, point2.y, point2.y);
-  // // positions.push(point2.x, point2.y + 20, point2.y + -20);
-  // const path = [ new THREE.Vector3(-1, 1, 0), 
-  //   new THREE.Vector3(0, 1, 0), 
-  //   new THREE.Vector3(1, 1, 0),
-  //   new THREE.Vector3(2, 1, 0),
-  //   new THREE.Vector3(3, 1, 0)
-  // ];
-
-
-  // const colors = [];
-
-  // // const points = GeometryUtils.hilbert3D( new THREE.Vector3( 0, 0, 0 ), 2.0, 1, 0, 1, 2, 3, 4, 5, 6, 7 );
-
-  // const spline = new THREE.CatmullRomCurve3( path );
-  // const divisions = Math.round( 2 * path.length );
-  // const point = new THREE.Vector3();
-  // const color = new THREE.Color();
-
-  // for ( let i = 0, l = divisions; i < l; i ++ ) {
-
-  //   const t = i / l;
-
-  //   spline.getPoint( t, point );
-  //   positions.push( point.x, point.y, point.z );
-
-  //   color.setHSL( t, 1.0, 0.5 );
-  //   colors.push( color.r, color.g, color.b );
-
-  // }
-
-  // // Geometry
-  // const geometry = new LineGeometry();
-  // geometry.setPositions(positions);
-  // geometry.setColors(colors);
-
-  // const matLine = new LineMaterial( {
-
-  //   color: 0xffffff,
-  //   linewidth: 1, // in pixels
-  //   vertexColors: true,
-  //   // resolution:  // to be set by renderer, eventually
-  //   dashed: false,
-  //   alphaToCoverage: true,
-  // });
-
-  // const line = new Line2( geometry, matLine );
-  // line.computeLineDistances();
-  // line.scale.set( 0.1, 0.1, 0.1 );
-  // scene.add(line);
-
-  drawEdge(0, 1);
-
   // Add background plane
   const backgroundMesh = generatePlaneMesh('./assets/background.png', def.background.width, def.background.height);
   backgroundMesh.position.z = -100;
@@ -289,7 +209,7 @@ function init() {
   window.addEventListener('resize', onWindowResize);
 
   // Info panel - TODO
-  const infoPanel = document.querySelector('#info');
+  infoPanel = document.querySelector('#info');
 }
 
 function onWindowResize() {
@@ -300,8 +220,8 @@ function onWindowResize() {
 }
 
 function onDocumentMouseUp(event) {
-  console.log('clicked');
-  clickedObject = true;
+  if (def.debug.clickEvent) console.log('clicked');
+  eventClickedObject = true;
   // const et = event.target;
   // const de = renderer.domElement;
   // // Appears to work better without offsets
@@ -333,7 +253,7 @@ function render() {
   TWEEN.update();
 
   // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
-  if (clickedObject) {
+  if (eventClickedObject) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
 
@@ -347,51 +267,47 @@ function render() {
 
         // Only want to select boxGeometry (crude check for now)
         if (intersects[0].object.geometry.type === 'BoxGeometry') {
-          console.log('selected box');
+          if (def.debug.objectSelection) console.log(`checking intersected ${INTERSECTED}`);
 
-          console.log(`checking intersected ${INTERSECTED}`);
-          if (selectedObject && def.debug.highlightSelection) {
-            console.log('removing old colouring');
+          if (selectedObject) {
+            if (def.debug.highlightSelection) console.log('removing old colouring');
             selectedObject.material.emissive.setHex(0x000000);
           }
-          // Store the last intersected thing
-          INTERSECTED = intersects[0].object;
-          selectedObject = intersects[0].object;
 
-          console.log(`intersected set to ${selectedObject}`);
+          INTERSECTED = intersects[0].object; // Store the last intersected thing
+          selectedObject = intersects[0].object; // Store object for later reference
+          // console.log(selectedObject);
+          infoPanel.innerHTML = generateTemplate(selectedObject.name);
+
+          if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);
 
           // Go to objects position
+          const { x, y, z } = intersects[0].object.position;
+          new TWEEN.Tween(camera.position)
+            .to({
+              x,
+              y,
+              // z: z + 20,
+            }, 1000)
+            .start()
+            .onComplete(() => {
+              // TODO: Orient the camera towards the middle of the web
+              // camera.lookAt(scene.position);
+            });
           if (def.debug.goToObject) {
-            const { x, y, z } = intersects[0].object.position;
-            new TWEEN.Tween(camera.position)
-              .to({
-                x,
-                y,
-                // z: z + 20,
-              }, 1000)
-              .start()
-              .onComplete(() => {
-                // TODO: Orient the camera towards the middle of the web
-                // camera.lookAt(scene.position);
-              });
             console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`);
           }
-          if (def.debug.highlightSelection) {
-            selectedObject.material.emissive.setHex(0x0000dd);
-          }
+          // Set highlight colour
+          selectedObject.material.emissive.setHex(0x0000dd);
 
-          if (def.debug.objectSelection) {
-            // intersects[0].object.material.color.setHex(0x000000); // Set to black
-            console.log(intersects[0]);
-          }
+          // if (def.debug.objectSelection) console.log(intersects[0]);
         }
       }
     } else {
       // We intersected nothing, clear our store
-      // This is causing the problem with object highlighting
       INTERSECTED = null;
     }
-    clickedObject = false;
+    eventClickedObject = false;
   }
 
   renderer.render(scene, camera);

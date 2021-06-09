@@ -191,16 +191,20 @@ function init() {
   const canvas = document.querySelector('#c');
   renderer = new THREE.WebGLRenderer({ canvas });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}`);
+  // renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
   // Controls
-  controls = new FlyControls(camera, renderer.domElement);
+  if (def.debug.godMode) {
+    controls = new FlyControls(camera, renderer.domElement);
 
-  controls.movementSpeed = def.control.movSpeed;
-  controls.domElement = renderer.domElement;
-  controls.rollSpeed = def.control.rollSpeed;
-  controls.autoForward = def.control.autoForward;
-  controls.dragToLook = def.control.dragToLook;
+    controls.movementSpeed = def.control.movSpeed;
+    controls.domElement = renderer.domElement;
+    controls.rollSpeed = def.control.rollSpeed;
+    controls.autoForward = def.control.autoForward;
+    controls.dragToLook = def.control.dragToLook;
+  }
 
   // Event listener for mouse
   document.addEventListener('mouseup', onDocumentMouseUp, false);
@@ -247,7 +251,8 @@ function render() {
   const delta = clock.getDelta();
 
   // controls.movementSpeed = 0.33 * d;
-  controls.update(delta);
+  if (def.debug.godMode) controls.update(delta);
+
   camera.updateMatrixWorld();
 
   TWEEN.update();

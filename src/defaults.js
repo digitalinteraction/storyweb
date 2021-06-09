@@ -50,6 +50,7 @@ export const settings = {
     dragToLook: true,
   },
   debug: {
+    godMode: false,
     clickEvent: false,
     objectSelection: false,
     goToObject: false,

@@ -194,6 +194,7 @@ function init() {
   console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}`);
   // renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
 
   // Controls
   if (def.debug.godMode) {
@@ -213,7 +214,7 @@ function init() {
   window.addEventListener('resize', onWindowResize);
 
   // Info panel - TODO
-  infoPanel = document.querySelector('#info');
+  infoPanel = document.querySelector('#info-template');
 }
 
 function onWindowResize() {

@@ -56,7 +56,7 @@ export const settings = {
     goToObject: false,
     highlightSelection: false,
     edgeCalculation: false,
-    axesHelper: true,
+    axesHelper: false,
   },
   sound: {
     refDistance: 5,

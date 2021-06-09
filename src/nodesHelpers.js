@@ -27,7 +27,7 @@ export function generateTemplate(id) {
       ${data.desc}
     </p>
     <div class="image">
-      <img src="${data.image}" />
+      <img src="${data.image}" class="img-fluid" />
     </div>
     <p class="seeAlso">
       ${data.seeAlso}

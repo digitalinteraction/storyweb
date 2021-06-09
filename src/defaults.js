@@ -38,6 +38,9 @@ export const settings = {
     radiusBottom: 0.5,
     height: 70,
     radialSegments: 12,
+    hue: 0.54,
+    sat: 0.50,
+    lum: 0.60,
   },
   background: {
     height: 800,
@@ -60,6 +63,10 @@ export const settings = {
   },
   sound: {
     refDistance: 5,
+  },
+  timeout: {
+    // time: 900000, // 15 mins
+    time: 60000, // 1 min
   },
 };
 

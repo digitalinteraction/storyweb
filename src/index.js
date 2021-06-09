@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import {
-  createMaterial,
+  createMaterialByColor,
   generateBoxMesh,
   generatePlaneMesh,
 } from './helpers';
 import calculateEdges from './grid';
 import nodes from './nodes.json';
-import { generateTemplate } from './nodesHelpers';
+import { defaultTemplate, generateTemplate } from './nodesHelpers';
 import { settings as def } from './defaults';
 
 const TWEEN = require('@tweenjs/tween.js');
@@ -25,6 +25,7 @@ let selectedObject;
 let infoPanel;
 
 let eventClickedObject = false;
+let lastTouchObject = Date.now();
 
 const mouse = new THREE.Vector2();
 const clock = new THREE.Clock();
@@ -166,7 +167,7 @@ function init() {
     const closed = false;
     const mesh = new THREE.Mesh(
       new THREE.TubeGeometry(pathBase, tubularSegments, radius, radialSegments, closed),
-      createMaterial(),
+      createMaterialByColor(def.edge.hue, def.edge.sat, def.edge.lum),
     );
     addObject(0, 0, mesh);
   }
@@ -218,6 +219,46 @@ function init() {
   infoPanel = document.querySelector('#info-template');
 }
 
+function setTouchTime() {
+  lastTouchObject = Date.now();
+}
+
+function checkTouchTime() {
+  // Check if timeOut should be triggered
+  const futureTime = lastTouchObject + def.timeout.time;
+  if (Date.now() >= futureTime) return true;
+  return false;
+}
+
+function resetInfoPanel() {
+  infoPanel.innerHTML = defaultTemplate();
+}
+
+function deselectObject(timeout) {
+  selectedObject.material.emissive.setHex(0x000000);
+  if (timeout) resetInfoPanel();
+}
+
+function timeoutScene() {
+  console.log('triggering timeout of scene');
+  const firstObj = scene.getObjectByName(0);
+  // camera.position.x = firstObj.position.x;
+  // camera.position.y = firstObj.position.y;
+  const { x, y } = firstObj.position;
+
+  new TWEEN.Tween(camera.position)
+    .to({
+      x,
+      y,
+      // z: z + 20,
+    }, 1000)
+    .start();
+  setTouchTime();
+
+  // Needs to deselect the node/edge and change the colouring
+  deselectObject(true);
+}
+
 function onWindowResize() {
   const canvas = renderer.domElement;
   camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -245,13 +286,17 @@ function onDocumentMouseUp(event) {
   mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
 
   if (def.debug.objectSelection) console.log(`event click: ${event.clientX}, ${event.clientY}. mouse: ${mouse.x}, ${mouse.y}`);
+
+  setTouchTime();
 }
+
 
 // Main render loop
 function render() {
   // Time elapsed since last render
   const delta = clock.getDelta();
 
+  if (checkTouchTime()) timeoutScene();
   // controls.movementSpeed = 0.33 * d;
   if (def.debug.godMode) controls.update(delta);
 
@@ -278,7 +323,7 @@ function render() {
 
           if (selectedObject) {
             if (def.debug.highlightSelection) console.log('removing old colouring');
-            selectedObject.material.emissive.setHex(0x000000);
+            deselectObject();
           }
 
           INTERSECTED = intersects[0].object; // Store the last intersected thing

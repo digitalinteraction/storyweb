@@ -14,6 +14,16 @@ export function createMaterial() {
   return material;
 }
 
+export function createMaterialByColor(hue, sat, lum) {
+  const material = new THREE.MeshPhongMaterial({
+    side: THREE.DoubleSide,
+  });
+
+  material.color.setHSL(hue, sat, lum);
+
+  return material;
+}
+
 export function createPhongMaterial() {
   const material = new THREE.MeshPhongMaterial({
     side: THREE.DoubleSide,

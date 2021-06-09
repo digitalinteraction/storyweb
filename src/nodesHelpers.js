@@ -18,21 +18,11 @@ export function getSeeAlso(id) {
 
 export function generateTemplate(id) {
   const data = nodes[id];
-  const markup = `
-  <div class="title">
-    <h2 class="name">
-      ${data.name}
-    </h2>
-    <p class="desc">
-      ${data.desc}
-    </p>
-    <div class="image">
-      <img src="${data.image}" class="img-fluid" />
+  const cardMarkupNoImg = `
+    <div class="card-body">
+      <h5 class="card-title">${data.name}</h5>
+      <p class="card-text">${data.desc}</p>
     </div>
-    <p class="seeAlso">
-      ${data.seeAlso}
-    </p>
-  </div>
   `;
   const cardMarkup = `
     <img src="${data.image}" alt="${data.name}" class="card-img-top">
@@ -41,5 +31,12 @@ export function generateTemplate(id) {
       <p class="card-text">${data.desc}</p>
     </div>
   `;
-  return cardMarkup;
+
+  if (data.image) return cardMarkup;
+
+  return cardMarkupNoImg;
+}
+
+export function defaultTemplate() {
+  return '<p>Click on a cube to start exploring the Story Web</p>';
 }

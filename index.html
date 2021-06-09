@@ -9,55 +9,30 @@
   <style>
     html, body {
        /* margin: 0; */
-       height: 100%;
+       /* height: 100%;
+       width: 100%; */
+       background-color: #333;
     }
     #c {
        width: 100%;
        height: 100%;
-       display: block;
-       /* float: left; */
+       /* display: block; */
     }
 
-    /* #info {
-      width: 30%;
-      height: 100%;
-      display: block;
-      float: left;
-    } */
+    #info {
+      background-color: #fff;
+    }
   </style>
 </head>
 <body>
-  
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col text-center">
-        <h1 class="display-1">Story:Web</h1>
-      </div>
+  <div class="row">
+    <div class="col-10 px-0">
+      <canvas id="c"></canvas>
     </div>
-    <div class="row">
-      <div class="col text-center">
-        <h2>Tell your story of climate change…</h2>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <ul class="nav justify-content-center">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Explore Story:Web</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <canvas id="c"></canvas>
-    <div class="row">
-      <div class="col-2">
-        <div id="info">Info here</div>
+    <div class="col-2 px-0">
+      <div id="info" class="pr-4">
+        <h1>Story:Web</h1>
+        <p>Click on a cube to start exploring the Story Web</p>
       </div>
     </div>
   </div>

@@ -34,5 +34,12 @@ export function generateTemplate(id) {
     </p>
   </div>
   `;
-  return markup;
+  const cardMarkup = `
+    <img src="${data.image}" alt="${data.name}" class="card-img-top">
+    <div class="card-body">
+      <h5 class="card-title">${data.name}</h5>
+      <p class="card-text">${data.desc}</p>
+    </div>
+  `;
+  return cardMarkup;
 }

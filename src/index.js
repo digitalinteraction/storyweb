@@ -57,15 +57,26 @@ function init() {
   const gridSize = 30;
   let grid = new Array(gridSize).fill(new Array(gridSize).fill(0));
 
-  // Lighting - Todo: Add an iterator here for multiple lights (def.light is an array)
-  // This is destructuring to get only member we want
-  // const { color, intensity } = def.light[0];
-  const light = new THREE.DirectionalLight(def.light[0].color, def.light[0].intensity);
-  light.position.set(def.light[0].x, def.light[0].y, def.light[0].z);
-  scene.add(light);
+  const lights = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const el of def.light) {
+    if (el.type === 'directional') {
+      const light = new THREE.DirectionalLight(el.color, el.intensity);
+      light.position.set(el.x, el.y, el.z);
+      scene.add(light);
+      lights.push(light);
+    }
+
+    if (el.type === 'ambient') {
+      const light = new THREE.AmbientLight(el.color); // soft white light
+      // light.position.set(el.x, el.y, el.z);
+      scene.add(light);
+      lights.push(light);
+    }
+  }
 
   // Object & material creation
-  let objects = []; // Array of objects
+  const objects = []; // Array of objects
   // Could do with adding an array of edges as well
 
   function addObject(x, y, obj) {

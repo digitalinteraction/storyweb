@@ -13,10 +13,20 @@ export const settings = {
   light: [
     {
       id: 0,
+      type: 'directional',
       color: 0xFFFFFF,
       intensity: 0.9,
       x: -1,
       y: 2,
+      z: 100,
+    },
+    {
+      id: 1,
+      type: 'ambient',
+      color: 0x303030,
+      intensity: 0.3,
+      x: 100,
+      y: 0,
       z: 100,
     },
   ],

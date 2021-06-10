@@ -215,8 +215,9 @@ function init() {
   // Event listener for resize
   window.addEventListener('resize', onWindowResize);
 
-  // Info panel - TODO
+  // Info panel
   infoPanel = document.querySelector('#info-template');
+  infoPanel.innerHTML = defaultTemplate();
 }
 
 function setTouchTime() {

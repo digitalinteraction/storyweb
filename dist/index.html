@@ -35,23 +35,31 @@
       text-align: left;
     }
 
-    
+    .info-card {
+      /* min-height: 50%; */
+    }
+
   </style>
 </head>
 <body>
   <div class="container-fluid fill">
     <div class="row fill">
-      <div class="col-9 px-0">
+      <div class="col-8 px-0">
         <canvas id="c"></canvas>
       </div>
-      <div class="col-3 px-0 info-panel">
-        <h1>Story:Web</h1>
-        <div class="card pt-2">
-          <div id="info-template" class="px-2 pb-2">
-            <p>Click on a cube to start exploring the Story Web</p>
+      <div class="col-4 px-0 info-panel">
+        <div class="row pb-2">
+          <div class="col">
+            <div class="card pt-2 info-card">
+              <div id="info-template" class="px-2 pb-2"></div>
+            </div>
           </div>
         </div>
-        
+        <div class="row align-items-end">
+          <div class="col align-self-end">
+            <img src="./assets/logo8.png" style="width: 200px;" alt="Story:Web">
+          </div>
+        </div>
       </div>
     </div>
   </div>

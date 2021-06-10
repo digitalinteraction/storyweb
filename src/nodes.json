@@ -7,7 +7,9 @@
     "image": "./assets/greysealskull.jpg",
     "seeAlso": "",
     "position": [14, 14],
-    "connections": [1, 2, 3, 5]
+    "connections": [1, 2, 3, 5],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": ""
   },
   {
     "id": 1,
@@ -17,7 +19,9 @@
     "image": "./assets/greyseals.jpg",
     "seeAlso": "",
     "position": [14, 13],
-    "connections": [0, 7]
+    "connections": [0, 7],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": "Sound credit TBC"
   },
   {
     "id": 2,
@@ -27,7 +31,9 @@
     "image": "./assets/graceHickling.jpg",
     "seeAlso": "",
     "position": [13, 14],
-    "connections": [0, 3]
+    "connections": [0, 3],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": ""
   },
   {
     "id": 3,
@@ -37,7 +43,9 @@
     "image": "./assets/farneislands.jpg",
     "seeAlso": "",
     "position": [14, 15],
-    "connections": [0, 2]
+    "connections": [0, 2],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": "Sound credit TBC"
   },
   {
     "id": 4,
@@ -47,7 +55,9 @@
     "image": "./assets/stcuthbert.jpg",
     "seeAlso": "",
     "position": [15, 14],
-    "connections": [3]
+    "connections": [3],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": ""
   },
   {
     "id": 5,
@@ -57,7 +67,9 @@
     "image": "./assets/sealhabitatloss.jpg",
     "seeAlso": "",
     "position": [13, 13],
-    "connections": [0, 6]
+    "connections": [0, 6],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": ""
   },
   {
     "id": 6,
@@ -67,7 +79,9 @@
     "image": "",
     "seeAlso": "",
     "position": [13, 12],
-    "connections": [5]
+    "connections": [5],
+    "imgCredit": "",
+    "sndCredit": ""
   },
   {
     "id": 7,
@@ -77,7 +91,9 @@
     "image": "./assets/tripstocoast.jpg",
     "seeAlso": "",
     "position": [14, 12],
-    "connections": [1, 6]
+    "connections": [1, 6],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": "Sound credit TBC"
   },
   {
     "id": 8,
@@ -87,6 +103,8 @@
     "image": "./assets/cuddyducks.jpg",
     "seeAlso": "",
     "position": [15, 13],
-    "connections": [4]
+    "connections": [4],
+    "imgCredit": "Image credit TBC",
+    "sndCredit": ""
   }
 ]

@@ -65,7 +65,8 @@ export const settings = {
     refDistance: 5,
   },
   timeout: {
-    time: 900000, // 15 mins
+    // time: 900000, // 15 mins
+    time: 180000, // 3 min
     // time: 60000, // 1 min
   },
 };

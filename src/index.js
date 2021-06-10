@@ -106,6 +106,7 @@ function init() {
         sound.setRefDistance(5);
         sound.setLoop(true);
         sound.play();
+        sound.name = soundName;
       });
       boxMesh.add(sound);
       sounds.push(sound);
@@ -249,13 +250,25 @@ function init() {
 }
 
 function restartAudio() {
-  console.log('restarting audio');
   // Iterate all sounds and do sound.play
+  // eslint-disable-next-line no-restricted-syntax
+  for (const el of sounds) {
+    if (!el.isPlaying) {
+      el.play();
+    }
+  }
 }
 
-function stopAudio() {
-  console.log('stopping audio');
+function stopAudio(soundName) {
   // Iterate all sounds and do sound.stop
+  // eslint-disable-next-line no-restricted-syntax
+  for (const el of sounds) {
+    if (el.name === soundName) {
+      console.log(`${el.name}, ${soundName}`);
+    } else {
+      el.stop();
+    }
+  }
   // Leave the passed in name running
 }
 
@@ -300,10 +313,13 @@ function timeoutScene() {
 }
 
 function toggleHighlightAudio(soundName) {
-  console.log(`todo: highlight audio on object ${soundName}`);
-  isAudioHighlighted = true;
-  stopAudio();
-  // Need to know which object to highlight
+  if (isAudioHighlighted) {
+    isAudioHighlighted = false;
+    restartAudio();
+  } else {
+    isAudioHighlighted = true;
+    stopAudio(soundName);
+  }
 }
 
 function onWindowResize() {
@@ -405,7 +421,16 @@ function render() {
       } else if (intersects[0].object === selectedObject) {
         // We have clicked on the same item
         console.log('clicked on same item');
-        toggleHighlightAudio();
+        // If there is an audio attached it will be a child
+        // NOTE: THIS IS PRETTY CLUNKY AND POTENTIALLY ERROR PRONE IF THERE ARE OTHER CHILDREN
+        if (selectedObject.children.length > 0) {
+          // TODO: Check more than 1st child
+          const audioObj = selectedObject.children[0];
+          if (audioObj.type === 'Audio') {
+            console.log(audioObj.name, audioObj.type);
+            toggleHighlightAudio(audioObj.name);
+          }
+        }
       }
     } else {
       // We intersected nothing, clear our store

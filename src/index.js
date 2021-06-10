@@ -22,8 +22,10 @@ let listener;
 let edges;
 let INTERSECTED;
 let selectedObject;
+let isAudioHighlighted = false;
 let infoPanel;
 
+const sounds = [];
 let eventClickedObject = false;
 let lastTouchObject = Date.now();
 
@@ -42,6 +44,8 @@ function init() {
   // Audio listener
   listener = new THREE.AudioListener();
   camera.add(listener);
+
+  const audioLoader = new THREE.AudioLoader();
 
   // Init scene
   scene = new THREE.Scene();
@@ -89,51 +93,64 @@ function init() {
     objects.push(obj);
   }
 
-  function addBoxGeometry(x, y, material, name, sound) {
+  function addBoxGeometry(x, y, material, name, soundName) {
     const boxMesh = generateBoxMesh(material, def.node.height, def.node.width, def.node.depth);
     boxMesh.name = name;
     addObject(x, y, boxMesh);
 
-    switch (sound) {
-      case 'waterlappingfarneislands':
-        boxMesh.add(sound1);
-        break;
-      case 'sealsvocalising':
-        boxMesh.add(sound2);
-        break;
-      case 'familiesatbeach':
-        boxMesh.add(sound3);
-        break;
-      default:
-        break;
+    if (soundName) {
+      // Generate the sound here and assign to boxMesh
+      const sound = new THREE.PositionalAudio(listener);
+      audioLoader.load(`./assets/sounds/${soundName}.mp3`, (buffer) => {
+        sound.setBuffer(buffer);
+        sound.setRefDistance(5);
+        sound.setLoop(true);
+        sound.play();
+      });
+      boxMesh.add(sound);
+      sounds.push(sound);
     }
+
+    // switch (soundName) {
+    //   case 'waterlappingfarneislands':
+    //     boxMesh.add(sound1);
+    //     break;
+    //   case 'sealsvocalising':
+    //     boxMesh.add(sound2);
+    //     break;
+    //   case 'familiesatbeach':
+    //     boxMesh.add(sound3);
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
-  const audioLoader = new THREE.AudioLoader();
 
-  const sound1 = new THREE.PositionalAudio(listener);
-  audioLoader.load('./assets/sounds/waterlappingfarneislands.mp3', (buffer) => {
-    sound1.setBuffer(buffer);
-    sound1.setRefDistance(5);
-    sound1.setLoop(true);
-    sound1.play();
-  });
 
-  const sound2 = new THREE.PositionalAudio(listener);
-  audioLoader.load('./assets/sounds/sealsvocalising.mp3', (buffer) => {
-    sound2.setBuffer(buffer);
-    sound2.setRefDistance(5);
-    sound2.setLoop(true);
-    sound2.play();
-  });
+  // const sound1 = new THREE.PositionalAudio(listener);
+  // audioLoader.load('./assets/sounds/waterlappingfarneislands.mp3', (buffer) => {
+  //   sound1.setBuffer(buffer);
+  //   sound1.setRefDistance(5);
+  //   sound1.setLoop(true);
+  //   sound1.play();
+  // });
 
-  const sound3 = new THREE.PositionalAudio(listener);
-  audioLoader.load('./assets/sounds/familiesatbeach.mp3', (buffer) => {
-    sound3.setBuffer(buffer);
-    sound3.setRefDistance(5);
-    sound3.setLoop(true);
-    sound3.play();
-  });
+  // const sound2 = new THREE.PositionalAudio(listener);
+  // audioLoader.load('./assets/sounds/sealsvocalising.mp3', (buffer) => {
+  //   sound2.setBuffer(buffer);
+  //   sound2.setRefDistance(5);
+  //   sound2.setLoop(true);
+  //   sound2.play();
+  // });
+
+  // const sound3 = new THREE.PositionalAudio(listener);
+  // audioLoader.load('./assets/sounds/familiesatbeach.mp3', (buffer) => {
+  //   sound3.setBuffer(buffer);
+  //   sound3.setRefDistance(5);
+  //   sound3.setLoop(true);
+  //   sound3.play();
+  // });
 
   // Iterate through grid, when we find an object, add it to the geometry
   // TODO
@@ -231,6 +248,17 @@ function init() {
   infoPanel.innerHTML = defaultTemplate();
 }
 
+function restartAudio() {
+  console.log('restarting audio');
+  // Iterate all sounds and do sound.play
+}
+
+function stopAudio() {
+  console.log('stopping audio');
+  // Iterate all sounds and do sound.stop
+  // Leave the passed in name running
+}
+
 function setTouchTime() {
   lastTouchObject = Date.now();
 }
@@ -271,6 +299,13 @@ function timeoutScene() {
   deselectObject(true);
 }
 
+function toggleHighlightAudio(soundName) {
+  console.log(`todo: highlight audio on object ${soundName}`);
+  isAudioHighlighted = true;
+  stopAudio();
+  // Need to know which object to highlight
+}
+
 function onWindowResize() {
   const canvas = renderer.domElement;
   camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -301,7 +336,6 @@ function onDocumentMouseUp(event) {
 
   setTouchTime();
 }
-
 
 // Main render loop
 function render() {
@@ -336,8 +370,10 @@ function render() {
           if (selectedObject) {
             if (def.debug.highlightSelection) console.log('removing old colouring');
             deselectObject();
+            isAudioHighlighted = false;
           }
 
+          // Select the object
           INTERSECTED = intersects[0].object; // Store the last intersected thing
           selectedObject = intersects[0].object; // Store object for later reference
           // console.log(selectedObject);
@@ -366,6 +402,10 @@ function render() {
 
           // if (def.debug.objectSelection) console.log(intersects[0]);
         }
+      } else if (intersects[0].object === selectedObject) {
+        // We have clicked on the same item
+        console.log('clicked on same item');
+        toggleHighlightAudio();
       }
     } else {
       // We intersected nothing, clear our store

@@ -386,7 +386,10 @@ function render() {
           if (selectedObject) {
             if (def.debug.highlightSelection) console.log('removing old colouring');
             deselectObject();
+
+            // Switch all audio back on
             isAudioHighlighted = false;
+            restartAudio();
           }
 
           // Select the object
@@ -422,9 +425,8 @@ function render() {
         // We have clicked on the same item
         console.log('clicked on same item');
         // If there is an audio attached it will be a child
-        // NOTE: THIS IS PRETTY CLUNKY AND POTENTIALLY ERROR PRONE IF THERE ARE OTHER CHILDREN
         if (selectedObject.children.length > 0) {
-          // TODO: Check more than 1st child
+          // NOTE: We are assuming here the 1st child is the audio (we only have audio as children)
           const audioObj = selectedObject.children[0];
           if (audioObj.type === 'Audio') {
             console.log(audioObj.name, audioObj.type);

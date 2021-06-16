@@ -161,7 +161,7 @@ function init() {
       addBoxGeometry(
         (node.position[0]) - 15,
         (node.position[1]) - 15,
-        node.image, node.id, node.sound,
+        node.thumb, node.id, node.sound,
       );
     });
   }

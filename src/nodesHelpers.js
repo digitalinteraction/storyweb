@@ -23,7 +23,11 @@ export function generateTemplate(id) {
   let sndCreditMarkup = '';
 
   if (data.image) {
-    imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top"></img>`;
+    if (data.name === 'St Cuthbert the Conservationist') {
+      imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image-portrait"></img>`;
+    } else {
+      imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image"></img>`;
+    }
   }
 
   if (data.imgCredit) {

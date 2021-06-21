@@ -7,7 +7,7 @@ export const settings = {
     near: 1,
     far: 1000,
     startX: -40,
-    startY: 10,
+    startY: 40,
     startZ: 50,
   },
   light: [
@@ -42,6 +42,7 @@ export const settings = {
     height: 12,
     width: 12,
     depth: 3.5,
+    defaultZ: 0,
   },
   edge: {
     radiusTop: 0.5,
@@ -73,6 +74,10 @@ export const settings = {
   },
   sound: {
     refDistance: 5,
+    iconSize: 3,
+    iconTexture: './assets/soundIcon.jpg',
+    iconOffsetXY: 5,
+    iconOffsetZ: 2,
   },
   timeout: {
     // time: 900000, // 15 mins

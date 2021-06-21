@@ -53,7 +53,7 @@ function init() {
 
   if (def.debug.axesHelper) {
     const axesHelper = new THREE.AxesHelper(20);
-    axesHelper.position.set(-80, 0, 0);
+    axesHelper.position.set(0, 0, 0);
     scene.add(axesHelper);
   }
 
@@ -83,20 +83,37 @@ function init() {
   const objects = []; // Array of objects
   // Could do with adding an array of edges as well
 
-  function addObject(x, y, obj) {
+  function addObject(x, y, z, obj) {
     // eslint-disable-next-line no-param-reassign
     obj.position.x = x * def.grid.spread;
     // eslint-disable-next-line no-param-reassign
     obj.position.y = -(y * def.grid.spread);
+    // eslint-disable-next-line no-param-reassign
+    obj.position.z = z;
 
     scene.add(obj);
     objects.push(obj);
   }
 
-  function addBoxGeometry(x, y, material, name, soundName) {
+  function addIconObject(x, y, z, obj) {
+    // eslint-disable-next-line no-param-reassign
+    obj.position.x = (x * def.grid.spread) + def.sound.iconOffsetXY;
+    // eslint-disable-next-line no-param-reassign
+    obj.position.y = (-(y * def.grid.spread)) + def.sound.iconOffsetXY;
+    // eslint-disable-next-line no-param-reassign
+    obj.position.z = z;
+    // eslint-disable-next-line no-param-reassign
+
+    scene.add(obj);
+    objects.push(obj);
+
+    console.log(`added icon to :${x}, y: ${y}, z: ${z}, name: ${obj.name}`);
+  }
+
+  function addBoxGeometry(x, y, z, material, name, soundName) {
     const boxMesh = generateBoxMesh(material, def.node.height, def.node.width, def.node.depth);
     boxMesh.name = name;
-    addObject(x, y, boxMesh);
+    addObject(x, y, z, boxMesh);
 
     if (soundName) {
       // Generate the sound here and assign to boxMesh
@@ -110,6 +127,17 @@ function init() {
       });
       boxMesh.add(sound);
       sounds.push(sound);
+
+      // Generate icon to denote sound
+      const offset = def.node.width / 2;
+      const soundIconMesh = generatePlaneMesh(
+        def.sound.iconTexture,
+        def.sound.iconSize,
+        def.sound.iconSize,
+      );
+      soundIconMesh.name = `${soundName}_icon`;
+      addIconObject((x), (y), z + def.sound.iconOffsetZ, soundIconMesh);
+
     }
 
     // switch (soundName) {
@@ -161,6 +189,7 @@ function init() {
       addBoxGeometry(
         (node.position[0]) - 15,
         (node.position[1]) - 15,
+        def.node.defaultZ,
         node.thumb, node.id, node.sound,
       );
     });
@@ -198,7 +227,7 @@ function init() {
       new THREE.TubeGeometry(pathBase, tubularSegments, radius, radialSegments, closed),
       createMaterialByColor(def.edge.hue, def.edge.sat, def.edge.lum),
     );
-    addObject(0, 0, mesh);
+    addObject(0, 0, 0, mesh);
   }
 
   // Generate edges

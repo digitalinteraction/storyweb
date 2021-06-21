@@ -40,7 +40,7 @@ export function generateTemplate(id) {
 
   const cardMarkup = `
     <div class="card-body">
-      <h5 class="card-title">${data.name}</h5>
+      <h1 class="card-title">${data.name}</h1>
       ${imgMarkup}
       <p class="card-text">${data.desc}</p>
       ${imgCreditMarkup}
@@ -54,7 +54,7 @@ export function generateTemplate(id) {
 export function defaultTemplate() {
   return `
     <div class="card-body">
-      <h3 class="card-title">Story:Web</h3>
+      <h1 class="card-title">Story:Web</h1>
       <h5>Tap a picture to start exploring the story web</h5>
       <p class="card-text">Tapping a picture moves it to the middle of your view and shows that snippet of a story.</p>
       <p class="card-text">Tapping a picture again plays only the sounds from that snippet of a story.</p>

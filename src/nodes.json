@@ -11,7 +11,7 @@
     "imgCredit": "Tyne & Wear Archives & Museums",
     "sndCredit": "",
     "imgLink": "",
-    "soundLink": ""
+    "sndLink": ""
   },
   {
     "id": 1,
@@ -25,7 +25,7 @@
     "imgCredit": "Who’s the Boss? by by davep-uk on Flickr.",
     "sndCredit": "Seal 002 by David de la Haye on Bandcamp. Hydrophone recording of seals vocalising underwater in the Outer Hebrides. It was recorded whilst anchored off the coast of Mingulay, September 2019.",
     "imgLink": "",
-    "soundLink": ""
+    "sndLink": ""
   },
   {
     "id": 2,
@@ -39,7 +39,7 @@
     "imgCredit": "Joe Payne, Berwick Advertiser.",
     "sndCredit": "",
     "imgLink": "",
-    "soundLink": ""
+    "sndLink": ""
   },
   {
     "id": 3,
@@ -53,7 +53,7 @@
     "imgCredit": "Farne Islands by James Stringer on Flickr.",
     "sndCredit": "Water Lapping, Farne Islands by David de la Haye on Bandcamp.",
     "imgLink": "",
-    "soundLink": ""
+    "sndLink": ""
   },
   {
     "id": 4,
@@ -65,7 +65,9 @@
     "position": [15, 14],
     "connections": [3],
     "imgCredit": "St Cuthbert by Nick Thompson on Flickr.",
-    "sndCredit": ""
+    "sndCredit": "",
+    "imgLink": "",
+    "sndLink": ""
   },
   {
     "id": 5,
@@ -77,7 +79,9 @@
     "position": [13, 13],
     "connections": [0, 6],
     "imgCredit": "Beach grass stabilising dunes while squeezing out native flora and fauna by NOAA Fisheries West Coast on Flickr.",
-    "sndCredit": ""
+    "sndCredit": "",
+    "imgLink": "",
+    "sndLink": ""
   },
   {
     "id": 6,
@@ -89,7 +93,9 @@
     "position": [13, 12],
     "connections": [5],
     "imgCredit": "",
-    "sndCredit": ""
+    "sndCredit": "",
+    "imgLink": "",
+    "sndLink": ""
   },
   {
     "id": 7,
@@ -101,7 +107,9 @@
     "position": [14, 12],
     "connections": [1, 6],
     "imgCredit": "Tynemouth Long Sands in 1967 by Terry Whalebone on Flickr.",
-    "sndCredit": "Families Playing At The Beach With Children by kaldark on Freesound.org."
+    "sndCredit": "Families Playing At The Beach With Children by kaldark on Freesound.org.",
+    "imgLink": "",
+    "sndLink": ""
   },
   {
     "id": 8,
@@ -115,6 +123,6 @@
     "imgCredit": "Image Eider ducks by Tony Hisgett on Flickr.",
     "sndCredit": "",
     "imgLink": "",
-    "soundLink": ""
+    "sndLink": ""
   }
 ]

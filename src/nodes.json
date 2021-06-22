@@ -9,7 +9,9 @@
     "position": [14, 14],
     "connections": [1, 2, 3, 5],
     "imgCredit": "Tyne & Wear Archives & Museums",
-    "sndCredit": ""
+    "sndCredit": "",
+    "imgLink": "",
+    "soundLink": ""
   },
   {
     "id": 1,
@@ -21,7 +23,9 @@
     "position": [14, 13],
     "connections": [0, 7],
     "imgCredit": "Who’s the Boss? by by davep-uk on Flickr.",
-    "sndCredit": "Seal 002 by David de la Haye on Bandcamp. Hydrophone recording of seals vocalising underwater in the Outer Hebrides. It was recorded whilst anchored off the coast of Mingulay, September 2019."
+    "sndCredit": "Seal 002 by David de la Haye on Bandcamp. Hydrophone recording of seals vocalising underwater in the Outer Hebrides. It was recorded whilst anchored off the coast of Mingulay, September 2019.",
+    "imgLink": "",
+    "soundLink": ""
   },
   {
     "id": 2,
@@ -33,7 +37,9 @@
     "position": [13, 14],
     "connections": [0, 3],
     "imgCredit": "Joe Payne, Berwick Advertiser.",
-    "sndCredit": ""
+    "sndCredit": "",
+    "imgLink": "",
+    "soundLink": ""
   },
   {
     "id": 3,
@@ -45,7 +51,9 @@
     "position": [14, 15],
     "connections": [0, 2],
     "imgCredit": "Farne Islands by James Stringer on Flickr.",
-    "sndCredit": "Water Lapping, Farne Islands by David de la Haye on Bandcamp."
+    "sndCredit": "Water Lapping, Farne Islands by David de la Haye on Bandcamp.",
+    "imgLink": "",
+    "soundLink": ""
   },
   {
     "id": 4,
@@ -105,6 +113,8 @@
     "position": [15, 13],
     "connections": [4],
     "imgCredit": "Image Eider ducks by Tony Hisgett on Flickr.",
-    "sndCredit": ""
+    "sndCredit": "",
+    "imgLink": "",
+    "soundLink": ""
   }
 ]

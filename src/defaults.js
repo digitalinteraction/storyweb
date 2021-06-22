@@ -49,9 +49,9 @@ export const settings = {
     radiusBottom: 0.5,
     height: 70,
     radialSegments: 12,
-    hue: 0.54,
-    sat: 0.50,
-    lum: 0.60,
+    hue: 0.90833,
+    sat: 1,
+    lum: 0.51,
   },
   background: {
     height: 800,
@@ -75,7 +75,8 @@ export const settings = {
   sound: {
     refDistance: 5,
     iconSize: 3,
-    iconTexture: './assets/soundIcon.jpg',
+    iconTexture: './assets/audioOff.png',
+    iconTextureOn: './assets/audioOn.png',
     iconOffsetXY: 5,
     iconOffsetZ: 2,
   },

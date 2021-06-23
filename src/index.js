@@ -4,10 +4,12 @@ import {
   createMaterialByColor,
   generateBoxMesh,
   generatePlaneMesh,
+  audioOnMaterial,
+  audioOffMaterial,
 } from './helpers';
 import calculateEdges from './grid';
 import nodes from './nodes.json';
-import { defaultTemplate, generateTemplate } from './nodesHelpers';
+import { defaultTemplate, generateTemplate, getSoundName } from './nodesHelpers';
 import { settings as def } from './defaults';
 
 const TWEEN = require('@tweenjs/tween.js');
@@ -136,15 +138,13 @@ function init() {
       sounds.push(sound);
 
       // Generate icon to denote sound
-      const offset = def.node.width / 2;
       const soundIconMesh = generatePlaneMesh(
-        def.sound.iconTexture,
+        def.sound.iconTextureOff,
         def.sound.iconSize,
         def.sound.iconSize,
       );
       soundIconMesh.name = `${soundName}_icon`;
       addIconObject((x), (y), z + def.sound.iconOffsetZ, soundIconMesh);
-
     }
 
     // switch (soundName) {
@@ -161,8 +161,6 @@ function init() {
     //     break;
     // }
   }
-
-
 
   // const sound1 = new THREE.PositionalAudio(listener);
   // audioLoader.load('./assets/sounds/waterlappingfarneislands.mp3', (buffer) => {
@@ -324,6 +322,7 @@ function resetInfoPanel() {
 }
 
 function deselectObject(timeout) {
+  // If timeout omitted, will only remove highlighting on currently highlighted obj
   selectedObject.material.emissive.setHex(0x000000);
   if (timeout) resetInfoPanel();
 }
@@ -348,13 +347,27 @@ function timeoutScene() {
   deselectObject(true);
 }
 
+function toggleAudioIcon(iconName, setIcon) {
+  const iconMesh = scene.getObjectByName(iconName);
+  if (setIcon) {
+    iconMesh.material = audioOnMaterial;
+  } else {
+    iconMesh.material = audioOffMaterial;
+  }
+}
+
 function toggleHighlightAudio(soundName) {
+  // console.log(`toggling ${soundName}, currently highlight: ${isAudioHighlighted}`);
   if (isAudioHighlighted) {
+    // Disable highlight
     isAudioHighlighted = false;
     restartAudio();
+    toggleAudioIcon(`${soundName}_icon`, false);
   } else {
+    // Enable highlight
     isAudioHighlighted = true;
     stopAudio(soundName);
+    toggleAudioIcon(`${soundName}_icon`, true);
   }
 }
 
@@ -419,8 +432,15 @@ function render() {
         if (intersects[0].object.geometry.type === 'BoxGeometry') {
           if (def.debug.objectSelection) console.log(`checking intersected ${INTERSECTED}`);
 
+          // If we have selectedObject stored (we clicked something previously)
           if (selectedObject) {
-            if (def.debug.highlightSelection) console.log('removing old colouring');
+            if (def.debug.highlightSelection) console.log('Clicked different, removing old colouring');
+            // If it has a sound, toggle the icon off
+            const soundName = getSoundName(selectedObject.name);
+            if (soundName) {
+              toggleAudioIcon(`${soundName}_icon`, false);
+            }
+            // Removes highlighting
             deselectObject();
 
             // Switch all audio back on
@@ -446,8 +466,8 @@ function render() {
             }, 1000)
             .start()
             .onComplete(() => {
-              // TODO: Orient the camera towards the middle of the web
-              // camera.lookAt(scene.position);
+              // Remove blue highlight once moved
+              deselectObject();
             });
           if (def.debug.goToObject) {
             console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`);
@@ -456,6 +476,8 @@ function render() {
           selectedObject.material.emissive.setHex(0x0000dd);
 
           // if (def.debug.objectSelection) console.log(intersects[0]);
+        } else if (intersects[0].object.geometry.type === 'PlaneMesh') {
+          console.log('clicked on icon');
         }
       } else if (intersects[0].object === selectedObject) {
         // We have clicked on the same item

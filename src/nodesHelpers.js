@@ -16,6 +16,10 @@ export function getSeeAlso(id) {
   return nodes[id].seeAlso;
 }
 
+export function getSoundName(id) {
+  return nodes[id].sound;
+}
+
 export function generateTemplate(id) {
   const data = nodes[id];
   let imgMarkup = '';

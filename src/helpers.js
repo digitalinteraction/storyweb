@@ -1,6 +1,15 @@
 import * as THREE from 'three';
 import { settings as def } from './defaults';
 
+const extLoader = new THREE.TextureLoader();
+
+export const audioOnMaterial = new THREE.MeshBasicMaterial({
+  map: extLoader.load(def.sound.iconTextureOn),
+});
+export const audioOffMaterial = new THREE.MeshBasicMaterial({
+  map: extLoader.load(def.sound.iconTextureOff),
+});
+
 export function createMaterial() {
   const material = new THREE.MeshPhongMaterial({
     side: THREE.DoubleSide,
@@ -91,3 +100,4 @@ export function generateEdgeMesh() {
 
 //   return material;
 // }
+

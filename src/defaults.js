@@ -79,6 +79,7 @@ export const settings = {
     iconTextureOn: './assets/audioOn.png',
     iconOffsetXY: 5,
     iconOffsetZ: 2,
+    backgroundAudio: 'background',
   },
   timeout: {
     // time: 900000, // 15 mins

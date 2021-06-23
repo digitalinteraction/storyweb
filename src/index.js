@@ -57,9 +57,16 @@ function init() {
     scene.add(axesHelper);
   }
 
-  // Main grid
-  const gridSize = 30;
-  let grid = new Array(gridSize).fill(new Array(gridSize).fill(0));
+  // Background sound
+  const bgSound = new THREE.Audio(listener);
+  audioLoader.load(`./assets/sounds/${def.sound.backgroundAudio}.mp3`, (buffer) => {
+    bgSound.setBuffer(buffer);
+    bgSound.setLoop(true);
+    bgSound.setVolume(0.5);
+    bgSound.play();
+    bgSound.name = 'backgroundSound';
+  });
+  sounds.push(bgSound);
 
   const lights = [];
   // eslint-disable-next-line no-restricted-syntax

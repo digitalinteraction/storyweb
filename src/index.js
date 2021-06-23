@@ -476,8 +476,20 @@ function render() {
           selectedObject.material.emissive.setHex(0x0000dd);
 
           // if (def.debug.objectSelection) console.log(intersects[0]);
-        } else if (intersects[0].object.geometry.type === 'PlaneMesh') {
-          console.log('clicked on icon');
+        } else if (intersects[0].object.geometry.type === 'PlaneGeometry') {
+          // Audio icons are the only planeGeometry in the scene
+          // Check name just to be sure
+          const iconName = intersects[0].object.name;
+          const iconPos = iconName.search('(_icon)'); // Store position as we use below
+          if (iconName && iconPos !== -1) {
+            // We need to know whether audio is currently highlighted
+            console.log(`Clicked on icon named ${iconName}`);
+            const soundName = iconName.slice(0, iconPos); // Stip _icon
+            // Trigger select object icon is attached to
+            // TO DO
+            // Trigger audio highlight
+            toggleHighlightAudio(soundName);
+          }
         }
       } else if (intersects[0].object === selectedObject) {
         // We have clicked on the same item

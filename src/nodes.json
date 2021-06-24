@@ -198,14 +198,14 @@
   {
     "id": 14,
     "name": "Longstone Lighthouse",
-    "desc": "Two famous women were the daughters of lighthouse keepers at Longstone Lighthouse: Grace Darling who rowed out with her father in rough seas to rescue survivors from the shipwrecked paddlesteamer Forfarshare in 1838; and, Grace Hickling the pioneering researcher and conservationist. The extreme weather events like storm surges associated with climate change put historic lighthouses and shipwrecks at risk.",
-    "sound": "",
+    "desc": "Two famous women were the daughters of Longstone Lighthouse keepers: Grace Darling who rowed out with her father in rough seas to rescue survivors from the shipwrecked paddlesteamer Forfarshare in 1838; and, Grace Hickling the pioneering researcher and conservationist. The extreme weather events like storm surges associated with climate change put historic lighthouses and shipwrecks at risk.",
+    "sound": "ThunderstormAtSea_DDLH",
     "image": "./assets/longstone.jpg",
     "thumb": "./assets/longstone_sq.jpg",
     "position": [13, 16],
     "connections": [2],
     "imgCredit": "Ian Preston on Flickr",
-    "sndCredit": "",
+    "sndCredit": "David de la Haye",
     "imgLink": "",
     "soundLink": ""
   },
@@ -220,6 +220,20 @@
     "connections": [1],
     "imgCredit": "GRID-Arendal on Flickr",
     "sndCredit": "",
+    "imgLink": "",
+    "soundLink": ""
+  },
+  {
+    "id": 16,
+    "name": "Pondlife",
+    "desc": "As the climate warms, ponds and freshwater habitats are among the first to be affected and the creatures that live there may tell us what we can expect in future. Water beetles, like this Great Diving Beetle, are a familiar sight in ponds and pools across the country. They’re a very diverse group of animals and include both specialists and generalists, common species and rare ones, species that occur widely and also those which are only found in a few locations. They’re a useful group to study when looking at the impact of climate change - what species can cope with change, and which struggle to adapt?",
+    "sound": "haughallpond",
+    "image": "./assets/greatdivingbeetle.jpg",
+    "thumb": "./assets/greatdivingbeetle_sq.jpg",
+    "position": [11, 12],
+    "connections": [11, 15],
+    "imgCredit": "collection of the Great North Museum: Hancock",
+    "sndCredit": "Underwater pond recording by David de la Haye",
     "imgLink": "",
     "soundLink": ""
   }

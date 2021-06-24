@@ -71,7 +71,7 @@ function init() {
   audioLoader.load(`./assets/sounds/${def.sound.backgroundAudio}.mp3`, (buffer) => {
     bgSound.setBuffer(buffer);
     bgSound.setLoop(true);
-    bgSound.setVolume(0.5);
+    bgSound.setVolume(def.sound.backgroundVol);
     bgSound.play();
     bgSound.name = 'backgroundSound';
   });

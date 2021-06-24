@@ -80,6 +80,7 @@ export const settings = {
     iconOffsetXY: 5,
     iconOffsetZ: 2,
     backgroundAudio: 'background',
+    backgroundVol: 0.5,
   },
   timeout: {
     // time: 900000, // 15 mins

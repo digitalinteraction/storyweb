@@ -16,6 +16,24 @@ export function getSeeAlso(id) {
   return nodes[id].seeAlso;
 }
 
+export function getSoundName(id) {
+  return nodes[id].sound;
+}
+
+export function getIdbySoundName(soundName) {
+  // console.log(`searching for ${soundName}`);
+  const result = nodes.find((node) => node.sound === soundName);
+  // console.log(`result is:`);
+  // console.log(result);
+  if (result) return result.id;
+  return false;
+}
+
+// (state) => (name) => {
+//   let result = state.personas.find(persona => persona.name === name)
+//   return result
+// },
+
 export function generateTemplate(id) {
   const data = nodes[id];
   let imgMarkup = '';
@@ -54,10 +72,21 @@ export function generateTemplate(id) {
 export function defaultTemplate() {
   return `
     <div class="card-body">
-      <h1 class="card-title">Story:Web</h1>
-      <h5>Tap a picture to start exploring the story web</h5>
-      <p class="card-text">Tapping a picture moves it to the middle of your view and shows that snippet of a story.</p>
-      <p class="card-text">Tapping a picture again plays only the sounds from that snippet of a story.</p>
+      <h3 class="card-title">Story:Web</h3>
+      <p class="card-text">This Story:Web is made up of objects from the Great North Museum: Hancock, images and sounds shared online, and public contributions from social media and elsewhere. It will grow during the exhibition.</p>
+      <p class="card-text">Help us work out where the stories go next on social media using #GrowStoryWeb, and your words, images and sounds could become part of the exhibition.</p>
+      <p class="card-text">
+        <strong>Tap a picture to start exploring.</strong>
+      </p>
+      <p class="card-text">
+        <strong>Plug in your headphones to hear the sounds in 3D.</strong>
+      </p>
     </div>
+
+    
+
+
+
+
   `;
 }

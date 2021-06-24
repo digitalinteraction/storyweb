@@ -20,6 +20,20 @@ export function getSoundName(id) {
   return nodes[id].sound;
 }
 
+export function getIdbySoundName(soundName) {
+  // console.log(`searching for ${soundName}`);
+  const result = nodes.find((node) => node.sound === soundName);
+  // console.log(`result is:`);
+  // console.log(result);
+  if (result) return result.id;
+  return false;
+}
+
+// (state) => (name) => {
+//   let result = state.personas.find(persona => persona.name === name)
+//   return result
+// },
+
 export function generateTemplate(id) {
   const data = nodes[id];
   let imgMarkup = '';

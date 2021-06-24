@@ -9,7 +9,12 @@ import {
 } from './helpers';
 import calculateEdges from './grid';
 import nodes from './nodes.json';
-import { defaultTemplate, generateTemplate, getSoundName } from './nodesHelpers';
+import {
+  defaultTemplate,
+  generateTemplate,
+  getSoundName,
+  getIdbySoundName,
+} from './nodesHelpers';
 import { settings as def } from './defaults';
 
 const TWEEN = require('@tweenjs/tween.js');
@@ -25,9 +30,11 @@ let edges;
 let INTERSECTED;
 let selectedObject;
 let isAudioHighlighted = false;
+let highlightedAudioName;
 let infoPanel;
 
 const sounds = [];
+const icons = [];
 let eventClickedObject = false;
 let lastTouchObject = Date.now();
 
@@ -115,8 +122,9 @@ function init() {
 
     scene.add(obj);
     objects.push(obj);
+    icons.push(obj);
 
-    console.log(`added icon to :${x}, y: ${y}, z: ${z}, name: ${obj.name}`);
+    // console.log(`added icon to :${x}, y: ${y}, z: ${z}, name: ${obj.name}`);
   }
 
   function addBoxGeometry(x, y, z, material, name, soundName, volume) {
@@ -147,45 +155,7 @@ function init() {
       soundIconMesh.name = `${soundName}_icon`;
       addIconObject((x), (y), z + def.sound.iconOffsetZ, soundIconMesh);
     }
-
-    // switch (soundName) {
-    //   case 'waterlappingfarneislands':
-    //     boxMesh.add(sound1);
-    //     break;
-    //   case 'sealsvocalising':
-    //     boxMesh.add(sound2);
-    //     break;
-    //   case 'familiesatbeach':
-    //     boxMesh.add(sound3);
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
-
-  // const sound1 = new THREE.PositionalAudio(listener);
-  // audioLoader.load('./assets/sounds/waterlappingfarneislands.mp3', (buffer) => {
-  //   sound1.setBuffer(buffer);
-  //   sound1.setRefDistance(5);
-  //   sound1.setLoop(true);
-  //   sound1.play();
-  // });
-
-  // const sound2 = new THREE.PositionalAudio(listener);
-  // audioLoader.load('./assets/sounds/sealsvocalising.mp3', (buffer) => {
-  //   sound2.setBuffer(buffer);
-  //   sound2.setRefDistance(5);
-  //   sound2.setLoop(true);
-  //   sound2.play();
-  // });
-
-  // const sound3 = new THREE.PositionalAudio(listener);
-  // audioLoader.load('./assets/sounds/familiesatbeach.mp3', (buffer) => {
-  //   sound3.setBuffer(buffer);
-  //   sound3.setRefDistance(5);
-  //   sound3.setLoop(true);
-  //   sound3.play();
-  // });
 
   // Iterate through grid, when we find an object, add it to the geometry
   // TODO
@@ -298,9 +268,7 @@ function stopAudio(soundName) {
   // Iterate all sounds and do sound.stop
   // eslint-disable-next-line no-restricted-syntax
   for (const el of sounds) {
-    if (el.name === soundName) {
-      console.log(`${el.name}, ${soundName}`);
-    } else {
+    if (el.name !== soundName) {
       el.stop();
     }
   }
@@ -346,27 +314,52 @@ function timeoutScene() {
 
   // Needs to deselect the node/edge and change the colouring
   deselectObject(true);
+  audioIconOff('');
+}
+
+function audioIconOff(iconName) {
+  // Sets all audio icons to off expect the one passed in
+  // eslint-disable-next-line no-restricted-syntax
+  for (const el of icons) {
+    if (el.name !== iconName) {
+      el.material = audioOffMaterial;
+    } else {
+      el.material = audioOnMaterial;
+    }
+  }
 }
 
 function toggleAudioIcon(iconName, setIcon) {
-  const iconMesh = scene.getObjectByName(iconName);
-  if (setIcon) {
-    iconMesh.material = audioOnMaterial;
-  } else {
-    iconMesh.material = audioOffMaterial;
-  }
+  // if (iconName === highlightedAudioName) {
+  //   console.log('we are currently highlighting it, so it should toggle off');
+  //   audioIconOff('');
+  // } else {
+  //   audioIconOff(iconName);
+  // }
+  audioIconOff(iconName);
+  // const iconMesh = scene.getObjectByName(iconName);
+  
+  // if (setIcon) {
+  //   iconMesh.material = audioOnMaterial;
+  // } else {
+  //   iconMesh.material = audioOffMaterial;
+  // }
 }
 
 function toggleHighlightAudio(soundName) {
   // console.log(`toggling ${soundName}, currently highlight: ${isAudioHighlighted}`);
   if (isAudioHighlighted) {
     // Disable highlight
+    console.log("disabling highlight");
     isAudioHighlighted = false;
+    highlightedAudioName = '';
     restartAudio();
-    toggleAudioIcon(`${soundName}_icon`, false);
+    // toggleAudioIcon(`${soundName}_icon`, false);
+    audioIconOff();
   } else {
     // Enable highlight
     isAudioHighlighted = true;
+    highlightedAudioName = soundName;
     stopAudio(soundName);
     toggleAudioIcon(`${soundName}_icon`, true);
   }
@@ -403,6 +396,35 @@ function onDocumentMouseUp(event) {
   setTouchTime();
 }
 
+function selectObject(intersectObj) {
+  // Select the object
+  INTERSECTED = intersectObj; // Store the last intersected thing
+  selectedObject = intersectObj; // Store object for later reference
+  // console.log(selectedObject);
+  infoPanel.innerHTML = generateTemplate(selectedObject.name);
+
+  if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);
+
+  // Go to objects position
+  const { x, y, z } = intersectObj.position;
+  new TWEEN.Tween(camera.position)
+    .to({
+      x,
+      y,
+      // z: z + 20,
+    }, 1000)
+    .start()
+    .onComplete(() => {
+      // Remove blue highlight once moved
+      deselectObject();
+    });
+  if (def.debug.goToObject) {
+    console.log(`Going to object pos: ${intersectObj.position.x}, ${intersectObj.position.y}`);
+  }
+  // Set highlight colour
+  selectedObject.material.emissive.setHex(0x0000dd);
+}
+
 // Main render loop
 function render() {
   // Time elapsed since last render
@@ -436,11 +458,13 @@ function render() {
           // If we have selectedObject stored (we clicked something previously)
           if (selectedObject) {
             if (def.debug.highlightSelection) console.log('Clicked different, removing old colouring');
+            audioIconOff(''); // Switch off all icons
             // If it has a sound, toggle the icon off
-            const soundName = getSoundName(selectedObject.name);
-            if (soundName) {
-              toggleAudioIcon(`${soundName}_icon`, false);
-            }
+            // const soundName = getSoundName(selectedObject.name);
+            // if (soundName) {
+            //   // toggleAudioIcon(`${soundName}_icon`, false);
+            //   toggleAudioIcon('', false);
+            // }
             // Removes highlighting
             deselectObject();
 
@@ -449,32 +473,8 @@ function render() {
             restartAudio();
           }
 
-          // Select the object
-          INTERSECTED = intersects[0].object; // Store the last intersected thing
-          selectedObject = intersects[0].object; // Store object for later reference
-          // console.log(selectedObject);
-          infoPanel.innerHTML = generateTemplate(selectedObject.name);
-
-          if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);
-
-          // Go to objects position
-          const { x, y, z } = intersects[0].object.position;
-          new TWEEN.Tween(camera.position)
-            .to({
-              x,
-              y,
-              // z: z + 20,
-            }, 1000)
-            .start()
-            .onComplete(() => {
-              // Remove blue highlight once moved
-              deselectObject();
-            });
-          if (def.debug.goToObject) {
-            console.log(`Going to object pos: ${intersects[0].object.position.x}, ${intersects[0].object.position.y}`);
-          }
-          // Set highlight colour
-          selectedObject.material.emissive.setHex(0x0000dd);
+          // Trigger select obj
+          selectObject(intersects[0].object);
 
           // if (def.debug.objectSelection) console.log(intersects[0]);
         } else if (intersects[0].object.geometry.type === 'PlaneGeometry') {
@@ -483,13 +483,36 @@ function render() {
           const iconName = intersects[0].object.name;
           const iconPos = iconName.search('(_icon)'); // Store position as we use below
           if (iconName && iconPos !== -1) {
-            // We need to know whether audio is currently highlighted
             console.log(`Clicked on icon named ${iconName}`);
             const soundName = iconName.slice(0, iconPos); // Stip _icon
-            // Trigger select object icon is attached to
-            // TO DO
-            // Trigger audio highlight
-            toggleHighlightAudio(soundName);
+            // Get ID this is attached to
+            const selectId = getIdbySoundName(soundName);
+
+            // We need to know whether audio is currently highlighted
+            if (soundName === highlightedAudioName) {
+              console.log('we are currently highlighting this, so need to toggle off');
+            }
+
+            if (selectedObject) {
+              // We have an object selected already
+              // Check we have found the object, then select it
+              console.log(selectId, selectedObject.name);
+              if (selectId !== false) {
+                if (selectId === selectedObject.name) {
+                  // All we need to do here is toggle the audio on/off
+                  // Trigger audio highlight
+                  toggleHighlightAudio(soundName);
+                } else {
+                  console.log(`now selecting object ${selectId}`);
+                  selectObject(scene.getObjectByName(selectId));
+                }
+              } else {
+                console.log('unable to find object icon attached to');
+              }
+            } else {
+              // Select the object
+              selectObject(scene.getObjectByName(selectId));
+            }
           }
         }
       } else if (intersects[0].object === selectedObject) {

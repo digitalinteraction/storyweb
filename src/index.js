@@ -110,7 +110,7 @@ function init() {
     console.log(`added icon to :${x}, y: ${y}, z: ${z}, name: ${obj.name}`);
   }
 
-  function addBoxGeometry(x, y, z, material, name, soundName) {
+  function addBoxGeometry(x, y, z, material, name, soundName, volume) {
     const boxMesh = generateBoxMesh(material, def.node.height, def.node.width, def.node.depth);
     boxMesh.name = name;
     addObject(x, y, z, boxMesh);
@@ -122,6 +122,7 @@ function init() {
         sound.setBuffer(buffer);
         sound.setRefDistance(5);
         sound.setLoop(true);
+        sound.setVolume(volume);
         sound.play();
         sound.name = soundName;
       });
@@ -190,7 +191,7 @@ function init() {
         (node.position[0]) - 15,
         (node.position[1]) - 15,
         def.node.defaultZ,
-        node.thumb, node.id, node.sound,
+        node.thumb, node.id, node.sound, node.vol,
       );
     });
   }

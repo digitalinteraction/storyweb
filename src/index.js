@@ -314,6 +314,7 @@ function timeoutScene() {
 
   // Needs to deselect the node/edge and change the colouring
   deselectObject(true);
+  restartAudio();
   audioIconOff('');
 }
 

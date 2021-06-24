@@ -59,9 +59,20 @@ export function defaultTemplate() {
   return `
     <div class="card-body">
       <h3 class="card-title">Story:Web</h3>
-      <h5>Tap a picture to start exploring the story web</h5>
-      <p class="card-text">Tapping a picture moves it to the middle of your view and shows that snippet of a story.</p>
-      <p class="card-text">Tapping a picture again plays only the sounds from that snippet of a story.</p>
+      <p class="card-text">This Story:Web is made up of objects from the Great North Museum: Hancock, images and sounds shared online, and public contributions from social media and elsewhere. It will grow during the exhibition.</p>
+      <p class="card-text">Help us work out where the stories go next on social media using #GrowStoryWeb, and your words, images and sounds could become part of the exhibition.</p>
+      <p class="card-text">
+        <strong>Tap a picture to start exploring.</strong>
+      </p>
+      <p class="card-text">
+        <strong>Plug in your headphones to hear the sounds in 3D.</strong>
+      </p>
     </div>
+
+    
+
+
+
+
   `;
 }

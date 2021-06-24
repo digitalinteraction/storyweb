@@ -42,7 +42,7 @@ export function generateTemplate(id) {
 
   if (data.image) {
     if (data.name === 'St Cuthbert the Conservationist') {
-      imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image-portrait"></img>`;
+      imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image"></img>`;
     } else {
       imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image"></img>`;
     }
@@ -59,7 +59,9 @@ export function generateTemplate(id) {
   const cardMarkup = `
     <div class="card-body">
       <h1 class="card-title">${data.name}</h1>
+      <div class="img-container">
       ${imgMarkup}
+      </div>
       <p class="card-text">${data.desc}</p>
       ${imgCreditMarkup}
       ${sndCreditMarkup}

@@ -85,7 +85,7 @@
     "position": [13, 14],
     "connections": [0, 6],
     "imgCredit": "Beach grass stabilising dunes while squeezing out native flora and fauna by NOAA Fisheries West Coast on Flickr.",
-    "sndCredit": "",
+    "sndCredit": "Hauxley Beach by Martin Eccles",
     "imgLink": "",
     "sndLink": ""
   },
@@ -107,7 +107,7 @@
   {
     "id": 7,
     "name": "Family Trips to the Coast",
-    "desc": "“The first time I saw a wild seal was on a trip to the NE 30 years ago. Now it’s a regular event for me & the kids, looking out for them at Tees Barrage on our walks.” @HeartofglassU on Twitter",
+    "desc": "\"The first time I saw a wild seal was on a trip to the NE 30 years ago. Now it’s a regular event for me & the kids, looking out for them at Tees Barrage on our walks.\" @HeartofglassU on Twitter",
     "sound": "familiesatbeach",
     "vol": 1,
     "image": "./assets/tripstocoast.jpg",
@@ -144,7 +144,7 @@
     "thumb": "./assets/selkie_sq.jpg",
     "position": [15, 12],
     "connections": [1],
-    "imgCredit": "Mary and Angus Hogg on Geograph",
+    "imgCredit": "A Selkie at Culzean Country Park by Mary and Angus Hogg on Geograph",
     "sndCredit": "",
     "imgLink": "",
     "soundLink": ""
@@ -159,8 +159,8 @@
     "thumb": "./assets/gullchip_sq.jpg",
     "position": [14, 11],
     "connections": [7],
-    "imgCredit": "Mike Prince on Flickr",
-    "sndCredit": "David de la Haye",
+    "imgCredit": "Fancy a Chip? by Mike Prince on Flickr",
+    "sndCredit": "Seabirds by David de la Haye",
     "imgLink": "",
     "soundLink": ""
   },
@@ -174,8 +174,8 @@
     "thumb": "./assets/swallowtail_sq.jpg",
     "position": [11, 13],
     "connections": [15],
-    "imgCredit": "Simon Bowen (object from Great North Museum: Hancock collection)",
-    "sndCredit": "David de la Haye",
+    "imgCredit": "Simon Bowen / Tyne &amp; Wear Archives &amp; Museums",
+    "sndCredit": "Meadow, Ohio by David de la Haye",
     "imgLink": "",
     "soundLink": ""
   },
@@ -189,8 +189,8 @@
     "thumb": "./assets/stfrancis_sq.jpg",
     "position": [15, 15],
     "connections": [4],
-    "imgCredit": "Catedrales e Iglesias/Cathedrals and Churches on Flickr",
-    "sndCredit": "Recording of C11th-C12th chant, Music Department, Newcastle University",
+    "imgCredit": "Templo de San Francisco de Asís (Coyoacán) Ciudad de México by Catedrales e Iglesias/Cathedrals and Churches on Flickr",
+    "sndCredit": "C11th-C12th plainsong, Music Department, Newcastle University",
     "imgLink": "https://flic.kr/p/677cmN",
     "soundLink": ""
   },
@@ -204,8 +204,8 @@
     "thumb": "./assets/durhamcathedral_sq.jpg",
     "position": [16, 14],
     "connections": [4],
-    "imgCredit": "Nick Thompson on Flickr",
-    "sndCredit": "David de la Haye",
+    "imgCredit": "Durham Cathderal by Nick Thompson on Flickr",
+    "sndCredit": "Durham Cathedral Friday Night During Lockdown by David de la Haye",
     "imgLink": "https://flic.kr/p/2wcX9M",
     "soundLink": ""
   },
@@ -219,8 +219,8 @@
     "thumb": "./assets/longstone_sq.jpg",
     "position": [13, 16],
     "connections": [2],
-    "imgCredit": "Ian Preston on Flickr",
-    "sndCredit": "David de la Haye",
+    "imgCredit": "Longstone Lighthouse by Ian Preston on Flickr",
+    "sndCredit": "Thunderstorms at Sea by David de la Haye",
     "imgLink": "",
     "soundLink": ""
   },
@@ -234,7 +234,7 @@
     "thumb": "./assets/penguins_sq.jpg",
     "position": [12, 13],
     "connections": [1],
-    "imgCredit": "GRID-Arendal on Flickr",
+    "imgCredit": "Adélie Penguins (Pygoscelis adeliae), Antarctic Peninsula by GRID-Arendal on Flickr",
     "sndCredit": "",
     "imgLink": "",
     "soundLink": ""
@@ -243,14 +243,14 @@
     "id": 16,
     "name": "Pondlife",
     "desc": "As the climate warms, ponds and freshwater habitats are among the first to be affected and the creatures that live there may tell us what we can expect in future. Water beetles, like this Great Diving Beetle, are a familiar sight in ponds and pools across the country. They’re a very diverse group of animals and include both specialists and generalists, common species and rare ones, species that occur widely and also those which are only found in a few locations. They’re a useful group to study when looking at the impact of climate change - what species can cope with change, and which struggle to adapt?",
-    "sound": "haughallpond",
+    "sound": "brassidepond",
     "vol": 1,
     "image": "./assets/greatdivingbeetle.jpg",
     "thumb": "./assets/greatdivingbeetle_sq.jpg",
     "position": [11, 12],
     "connections": [11, 15],
-    "imgCredit": "collection of the Great North Museum: Hancock",
-    "sndCredit": "Underwater pond recording by David de la Haye",
+    "imgCredit": "Great Diving Beetle, Tyne &amp; Wear Archive &amp; Museums",
+    "sndCredit": "Brasside Pond, Underwater by David de la Haye",
     "imgLink": "",
     "soundLink": ""
   }

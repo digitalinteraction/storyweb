@@ -291,8 +291,10 @@ function resetInfoPanel() {
 }
 
 function deselectObject(timeout) {
-  // If timeout omitted, will only remove highlighting on currently highlighted obj
-  selectedObject.material.emissive.setHex(0x000000);
+  // If timeout omitted, will only remove highlighting
+  if (selectedObject) {
+    selectedObject.material.emissive.setHex(0x000000);
+  }
   if (timeout) resetInfoPanel();
 }
 

@@ -1,0 +1,58 @@
+html, body {
+  margin: 0; 
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  overflow-x: hidden;
+}
+#c {
+  width: 100%;
+  height: 100%;
+  /* display: block; */
+}
+
+.fill {
+ min-height: 100%;
+ height: 100%;
+}
+
+.info-panel {
+ /* color: white; */
+ text-align: center;
+}
+
+#info-template {
+ background-color: #fff;
+ color: black;
+ text-align: left;
+}
+
+.info-card {
+ /* min-height: 50%; */
+}
+
+.info-card-image-portrait {
+ max-width:75%;
+ max-height:75%;
+ height: auto;
+ width:auto;
+}
+
+.instructions {
+ text-align: left;
+}
+
+.instText {
+ font-weight: bold;
+}
+
+@media screen and (max-width: 576px) {
+  /* #c {
+    height: 50%
+  } */
+
+  .info-card {
+    overflow: scroll;
+    height: 50%;
+  }
+}

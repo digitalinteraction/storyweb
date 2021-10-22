@@ -23,11 +23,15 @@ module.exports = {
         },
       },
       {
-
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-
         type: 'asset/resource',
-
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
       },
     ],
   },
@@ -35,6 +39,6 @@ module.exports = {
   devtool: 'source-map',
 
   devServer: {
-    contentBase: './dist' // Can also be pointed to ./dist
+    contentBase: './dist', // Can also be pointed to ./dist
   },
 };

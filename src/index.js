@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import {
   createMaterialByColor,

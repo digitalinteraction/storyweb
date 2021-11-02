@@ -56,3 +56,13 @@ html, body {
     height: 50%;
   } */
 }
+
+#info {
+	position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+  background-color: white;
+}

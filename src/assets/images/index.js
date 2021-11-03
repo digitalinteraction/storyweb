@@ -1,0 +1,1 @@
+export cuddyducks_sq from 'cuddyducks_sq.jpg';

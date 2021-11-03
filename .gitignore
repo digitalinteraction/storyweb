@@ -5,5 +5,4 @@ webpack-notes.md
 *.code-workspace
 .DS_Store
 
-dist/example-*
-dist/assets/sounds/example-*
+dist

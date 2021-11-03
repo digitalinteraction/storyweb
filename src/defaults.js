@@ -75,8 +75,6 @@ export const settings = {
   sound: {
     refDistance: 5,
     iconSize: 3,
-    iconTextureOff: './assets/audioOff.png',
-    iconTextureOn: './assets/audioOn.png',
     iconOffsetXY: 5,
     iconOffsetZ: 2,
     backgroundAudio: 'background',

@@ -1,31 +1,7 @@
-import * as THREE from 'three';
-import { settings as def } from './defaults';
-
-const extLoader = new THREE.TextureLoader();
-
-export const audioOnMaterial = new THREE.MeshBasicMaterial({
-  map: extLoader.load(def.sound.iconTextureOn),
-});
-export const audioOffMaterial = new THREE.MeshBasicMaterial({
-  map: extLoader.load(def.sound.iconTextureOff),
-});
-
-export function createMaterial() {
-  const material = new THREE.MeshPhongMaterial({
-    side: THREE.DoubleSide,
-  });
-
-  const hue = Math.random();
-  const saturation = 1;
-  const luminance = 0.5;
-  material.color.setHSL(hue, saturation, luminance);
-
-  return material;
-}
-
-export function createMaterialByColor(hue, sat, lum) {
-  const material = new THREE.MeshPhongMaterial({
-    side: THREE.DoubleSide,
+// Not entirely sure having this helper file is any use, as have to pass in THREE each time
+export function createMaterialByColor(hue, sat, lum, THREE2) {
+  const material = new THREE2.MeshPhongMaterial({
+    side: THREE2.DoubleSide,
   });
 
   material.color.setHSL(hue, sat, lum);
@@ -33,60 +9,53 @@ export function createMaterialByColor(hue, sat, lum) {
   return material;
 }
 
-export function createPhongMaterial() {
-  const material = new THREE.MeshPhongMaterial({
-    side: THREE.DoubleSide,
-  });
-
-  const hue = Math.random();
-  const saturation = 1;
-  const luminance = 0.5;
-  material.color.setHSL(hue, saturation, luminance);
-
-  return material;
-}
-
-export function generateSolidMesh(geometry) {
-  return new THREE.Mesh(geometry, createMaterial());
-}
-
-export function generatePlaneMesh(material, sizeX, sizeY) {
-  const loader = new THREE.TextureLoader();
-  const planeMaterial = new THREE.MeshBasicMaterial({
-    // These are loaded from the dist folder
-    // TODO not sure how to set up with webpack better?
+export function generatePlaneMesh(material, sizeX, sizeY, THREE2) {
+  const loader = new THREE2.TextureLoader();
+  const planeMaterial = new THREE2.MeshBasicMaterial({
     map: loader.load(material),
   });
-  const planeGeometry = new THREE.PlaneGeometry(sizeX, sizeY);
-  return new THREE.Mesh(planeGeometry, planeMaterial);
+  const planeGeometry = new THREE2.PlaneGeometry(sizeX, sizeY);
+  return new THREE2.Mesh(planeGeometry, planeMaterial);
 }
 
-export function generateBoxMesh(material, sizeX, sizeY, sizeZ) {
-  const loader = new THREE.TextureLoader();
-  const boxMaterial = new THREE.MeshLambertMaterial({
+export function generateBoxMesh(material, sizeX, sizeY, sizeZ, THREE2) {
+  const loader = new THREE2.TextureLoader();
+  const boxMaterial = new THREE2.MeshLambertMaterial({
     map: loader.load(material),
   });
-  // const boxMaterial = new THREE.MeshBasicMaterial({
-  //   // These are loaded from the dist folder
-  //   // TODO not sure how to set up with webpack better?
-  //   map: loader.load(material),
-  // });
-  const boxGeometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
-  return new THREE.Mesh(boxGeometry, boxMaterial);
+  const boxGeometry = new THREE2.BoxGeometry(sizeX, sizeY, sizeZ);
+  return new THREE2.Mesh(boxGeometry, boxMaterial);
 }
 
-export function generateEdgeMesh() {
-  // Test cylinder (edge)
-  return new THREE.Mesh(
-    new THREE.CylinderGeometry(
-      def.edge.radiusTop,
-      def.edge.radiusBottom,
-      def.edge.height,
-      def.edge.radialSegments,
-    ),
-    createMaterial(),
-  );
-}
+// export function generateEdgeMesh(THREE2) {
+//   // Test cylinder (edge)
+//   return new THREE2.Mesh(
+//     new THREE2.CylinderGeometry(
+//       def.edge.radiusTop,
+//       def.edge.radiusBottom,
+//       def.edge.height,
+//       def.edge.radialSegments,
+//     ),
+//     createMaterial(),
+//   );
+// }
+
+// export function createPhongMaterial() {
+//   const material = new THREE.MeshPhongMaterial({
+//     side: THREE.DoubleSide,
+//   });
+
+//   const hue = Math.random();
+//   const saturation = 1;
+//   const luminance = 0.5;
+//   material.color.setHSL(hue, saturation, luminance);
+
+//   return material;
+// }
+
+// export function generateSolidMesh(geometry) {
+//   return new THREE.Mesh(geometry, createMaterial());
+// }
 
 // function createMaterial() {
 //   const material = new THREE.MeshPhongMaterial({
@@ -101,3 +70,24 @@ export function generateEdgeMesh() {
 //   return material;
 // }
 
+// const extLoader = new THREE.TextureLoader();
+
+// export const audioOnMaterial = new THREE.MeshBasicMaterial({
+//   map: extLoader.load(audioOn),
+// });
+// export const audioOffMaterial = new THREE.MeshBasicMaterial({
+//   map: extLoader.load(audioOff),
+// });
+
+// export function createMaterial() {
+//   const material = new THREE.MeshPhongMaterial({
+//     side: THREE.DoubleSide,
+//   });
+
+//   const hue = Math.random();
+//   const saturation = 1;
+//   const luminance = 0.5;
+//   material.color.setHSL(hue, saturation, luminance);
+
+//   return material;
+// }

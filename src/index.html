@@ -1,41 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <title><%= htmlWebpackPlugin.options.title %></title>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="<%= htmlWebpackPlugin.options.metaDesc%>" />
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <link rel="stylesheet" href="style.css">
-  <title>Story:Web</title>
 </head>
 <body>
   <div class="container-fluid fill">
     <div class="row fill">
 
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              Text here yes
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- <div class="col px-0 canvas-div">
+        <canvas id="c"></canvas>
+      </div> -->
 
-      <div class="col-sm-8 px-0 canvas-div">
+      <div class="col">
         <canvas id="c"></canvas>
       </div>
 
-        <div id="info">Description</div>
+      <div id="info">
+        <div id="info-template" class="px-2 pb-2"></div>
+      </div>
 
       <div class="col-sm-4 px-0 info-panel d-sm-flex flex-column">
         <div class="row pb-2 flex-grow-1">

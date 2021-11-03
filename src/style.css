@@ -46,16 +46,16 @@ html, body {
  font-weight: bold;
 }
 
-@media screen and (max-width: 576px) {
-  /* #c {
+/* @media screen and (max-width: 576px) {
+  #c {
     height: 50%
-  } */
+  }
 
-  /* .info-card {
+  .info-card {
     overflow: scroll;
     height: 50%;
-  } */
-}
+  }
+} */
 
 #info {
 	position: absolute;

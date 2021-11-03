@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack serve --mode development",
     "build": "NODE_ENV=production webpack",
     "build-dev": "webpack --watch",
     "deploy": "git subtree push --prefix dist origin gh-pages"
@@ -16,6 +17,10 @@
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.3",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^12.3.0",
     "webpack": "^5.35.1",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"

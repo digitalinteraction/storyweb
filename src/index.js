@@ -6,8 +6,6 @@ import {
   createMaterialByColor,
   generateBoxMesh,
   generatePlaneMesh,
-  audioOnMaterial,
-  audioOffMaterial,
 } from './helpers';
 import calculateEdges from './grid';
 import nodes from './nodes.json';
@@ -19,8 +17,31 @@ import {
 } from './nodesHelpers';
 import { settings as def } from './defaults';
 
+// Misc assets
+// import backgroundAudio from './assets/sounds/background.mp3';
+import backgroundImg from './assets/background.png';
+import audioOff from './assets/audioOff.png';
+import audioOn from './assets/audioOn.png';
+
+// Import all files
+function importAll(r) {
+  let files = {};
+  r.keys().map((item, index) => { files[item.replace('./', '')] = r(item); });
+  return files;
+}
+// Images
+const images = importAll(require.context('./assets/images', false, /\.(png|jpe?g|svg)$/));
+// console.log('images');
+// console.log(images);
+// console.log(images['cuddyducks_sq.jpg']);
+
+// Sounds
+const soundFiles = importAll(require.context('./assets/sounds', false, /\.(mp3)$/));
+// console.log('sounds');
+// console.log(soundFiles);
+// console.log(soundFiles['background.mp3'].default);
+
 const TWEEN = require('@tweenjs/tween.js');
-// import GreySeal from './assets/greySealSkull.jpg';
 
 let camera;
 let scene;
@@ -42,6 +63,8 @@ let lastTouchObject = Date.now();
 
 const mouse = new THREE.Vector2();
 const clock = new THREE.Clock();
+
+const extLoader = new THREE.TextureLoader();
 
 function init() {
   // Camera
@@ -70,7 +93,7 @@ function init() {
 
   // Background sound
   const bgSound = new THREE.Audio(listener);
-  audioLoader.load(`./assets/sounds/${def.sound.backgroundAudio}.mp3`, (buffer) => {
+  audioLoader.load(soundFiles['background.mp3'].default, (buffer) => {
     bgSound.setBuffer(buffer);
     bgSound.setLoop(true);
     bgSound.setVolume(def.sound.backgroundVol);
@@ -130,14 +153,20 @@ function init() {
   }
 
   function addBoxGeometry(x, y, z, material, name, soundName, volume) {
-    const boxMesh = generateBoxMesh(material, def.node.height, def.node.width, def.node.depth);
+    const boxMesh = generateBoxMesh(
+      material,
+      def.node.height,
+      def.node.width,
+      def.node.depth,
+      THREE,
+    );
     boxMesh.name = name;
     addObject(x, y, z, boxMesh);
 
     if (soundName) {
       // Generate the sound here and assign to boxMesh
       const sound = new THREE.PositionalAudio(listener);
-      audioLoader.load(`./assets/sounds/${soundName}.mp3`, (buffer) => {
+      audioLoader.load(soundFiles[`${soundName}.mp3`].default, (buffer) => {
         sound.setBuffer(buffer);
         sound.setRefDistance(5);
         sound.setLoop(true);
@@ -150,9 +179,10 @@ function init() {
 
       // Generate icon to denote sound
       const soundIconMesh = generatePlaneMesh(
-        def.sound.iconTextureOff,
+        audioOff,
         def.sound.iconSize,
         def.sound.iconSize,
+        THREE,
       );
       soundIconMesh.name = `${soundName}_icon`;
       addIconObject((x), (y), z + def.sound.iconOffsetZ, soundIconMesh);
@@ -168,7 +198,7 @@ function init() {
         (node.position[0]) - 15,
         (node.position[1]) - 15,
         def.node.defaultZ,
-        node.thumb, node.id, node.sound, node.vol,
+        images[node.thumb], node.id, node.sound, node.vol,
       );
     });
   }
@@ -203,7 +233,7 @@ function init() {
     const closed = false;
     const mesh = new THREE.Mesh(
       new THREE.TubeGeometry(pathBase, tubularSegments, radius, radialSegments, closed),
-      createMaterialByColor(def.edge.hue, def.edge.sat, def.edge.lum),
+      createMaterialByColor(def.edge.hue, def.edge.sat, def.edge.lum, THREE),
     );
     addObject(0, 0, 0, mesh);
   }
@@ -217,7 +247,12 @@ function init() {
   }
 
   // Add background plane
-  const backgroundMesh = generatePlaneMesh('./assets/background.png', def.background.width, def.background.height);
+  const backgroundMesh = generatePlaneMesh(
+    backgroundImg,
+    def.background.width,
+    def.background.height,
+    THREE,
+  );
   backgroundMesh.position.z = -100;
   scene.add(backgroundMesh);
   objects.push(backgroundMesh);
@@ -255,6 +290,10 @@ function init() {
   infoPanel = document.querySelector('#info-template');
   infoPanel.innerHTML = defaultTemplate();
 }
+
+
+
+
 
 function restartAudio() {
   // Iterate all sounds and do sound.play
@@ -300,6 +339,24 @@ function deselectObject(timeout) {
   if (timeout) resetInfoPanel();
 }
 
+function audioIconOff(iconName) {
+  // Sets all audio icons to off except the one passed in
+  const newMatOff = new THREE.MeshBasicMaterial({
+    map: extLoader.load(audioOff),
+  });
+  const newMatOn = new THREE.MeshBasicMaterial({
+    map: extLoader.load(audioOn),
+  });
+  // eslint-disable-next-line no-restricted-syntax
+  for (const el of icons) {
+    if (el.name !== iconName) {
+      el.material = newMatOff;
+    } else {
+      el.material = newMatOn;
+    }
+  }
+}
+
 function timeoutScene() {
   console.log('triggering timeout of scene');
   const firstObj = scene.getObjectByName(0);
@@ -320,18 +377,6 @@ function timeoutScene() {
   deselectObject(true);
   restartAudio();
   audioIconOff('');
-}
-
-function audioIconOff(iconName) {
-  // Sets all audio icons to off expect the one passed in
-  // eslint-disable-next-line no-restricted-syntax
-  for (const el of icons) {
-    if (el.name !== iconName) {
-      el.material = audioOffMaterial;
-    } else {
-      el.material = audioOnMaterial;
-    }
-  }
 }
 
 function toggleAudioIcon(iconName, setIcon) {

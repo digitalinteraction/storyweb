@@ -5,25 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="<%= htmlWebpackPlugin.options.metaDesc%>" />
-  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-  <link rel="stylesheet" href="style.css">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 </head>
 <body>
+  <!-- Modal/popover -->
+  <div id="startModal">
+    Welcome
+    <button id="welcomeModalButton">Explore</button>
+  </div>
   <div class="container-fluid fill">
     <div class="row fill">
 
-      <!-- <div class="col px-0 canvas-div">
-        <canvas id="c"></canvas>
-      </div> -->
-
-      <div class="col">
+      <div class="col-sm-8 px-0 canvas-div">
         <canvas id="c"></canvas>
       </div>
 
-      <div id="info">
-        <div id="info-template" class="px-2 pb-2"></div>
-      </div>
+      
 
       <div class="col-sm-4 px-0 info-panel d-sm-flex flex-column">
         <div class="row pb-2 flex-grow-1">
@@ -33,7 +30,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row mb-4 align-items-end flex-grow-1">
+        <div class="row mb-4 align-items-end flex-grow-1">
           <div class="col-2">
             <div>
               <img src="./assets/help.png" alt="Help icon">
@@ -46,14 +43,10 @@
           <div class="col align-self-end">
             <img src="./assets/logo8.png" style="width: 200px;" alt="Story:Web">
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
-    
   </div>
-  
-  
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script> -->
   <script src="./main.js"></script>
 </body>
 </html>

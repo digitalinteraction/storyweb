@@ -1,5 +1,14 @@
 import nodes from './nodes.json';
 
+// Import all files
+function importAll(r) {
+  const files = {};
+  r.keys().map((item) => { files[item.replace('./', '')] = r(item); });
+  return files;
+}
+
+const imageFiles = importAll(require.context('./assets/images', false, /\.(png|jpe?g|svg)$/));
+
 export function findByName(name) {
   return `TODO - find ${name}`;
 }
@@ -42,9 +51,9 @@ export function generateTemplate(id) {
 
   if (data.image) {
     if (data.name === 'St Cuthbert the Conservationist') {
-      imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image-portrait"></img>`;
+      imgMarkup = `<img src="${imageFiles[data.image]}" alt="${data.name}" class="card-img-top info-card-image-portrait"></img>`;
     } else {
-      imgMarkup = `<img src="${data.image}" alt="${data.name}" class="card-img-top info-card-image"></img>`;
+      imgMarkup = `<img src="${imageFiles[data.image]}" alt="${data.name}" class="card-img-top info-card-image"></img>`;
     }
   }
 

@@ -12,21 +12,20 @@ import nodes from './nodes.json';
 import {
   defaultTemplate,
   generateTemplate,
-  getSoundName,
   getIdbySoundName,
 } from './nodesHelpers';
 import { settings as def } from './defaults';
+import './style.css';
 
 // Misc assets
-// import backgroundAudio from './assets/sounds/background.mp3';
 import backgroundImg from './assets/background.png';
 import audioOff from './assets/audioOff.png';
 import audioOn from './assets/audioOn.png';
 
 // Import all files
 function importAll(r) {
-  let files = {};
-  r.keys().map((item, index) => { files[item.replace('./', '')] = r(item); });
+  const files = {};
+  r.keys().map((item) => { files[item.replace('./', '')] = r(item); });
   return files;
 }
 // Images
@@ -40,6 +39,15 @@ const soundFiles = importAll(require.context('./assets/sounds', false, /\.(mp3)$
 // console.log('sounds');
 // console.log(soundFiles);
 // console.log(soundFiles['background.mp3'].default);
+
+function startScene() {
+  console.log('Trigger start scene');
+  const startModal = document.querySelector('#startModal');
+  startModal.style.display = 'none';
+}
+const welcomeButton = document.querySelector('#welcomeModalButton');
+welcomeButton.onclick = startScene;
+
 
 const TWEEN = require('@tweenjs/tween.js');
 
@@ -291,10 +299,6 @@ function init() {
   infoPanel.innerHTML = defaultTemplate();
 }
 
-
-
-
-
 function restartAudio() {
   // Iterate all sounds and do sound.play
   // eslint-disable-next-line no-restricted-syntax
@@ -388,7 +392,7 @@ function toggleAudioIcon(iconName, setIcon) {
   // }
   audioIconOff(iconName);
   // const iconMesh = scene.getObjectByName(iconName);
-  
+
   // if (setIcon) {
   //   iconMesh.material = audioOnMaterial;
   // } else {
@@ -509,13 +513,6 @@ function render() {
           if (selectedObject) {
             if (def.debug.highlightSelection) console.log('Clicked different, removing old colouring');
             audioIconOff(''); // Switch off all icons
-            // If it has a sound, toggle the icon off
-            // const soundName = getSoundName(selectedObject.name);
-            // if (soundName) {
-            //   // toggleAudioIcon(`${soundName}_icon`, false);
-            //   toggleAudioIcon('', false);
-            // }
-            // Removes highlighting
             deselectObject();
 
             // Switch all audio back on

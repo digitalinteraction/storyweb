@@ -68,7 +68,7 @@ export const settings = {
     clickEvent: false,
     objectSelection: false,
     goToObject: false,
-    highlightSelection: true,
+    highlightSelection: false,
     edgeCalculation: false,
     axesHelper: false,
   },

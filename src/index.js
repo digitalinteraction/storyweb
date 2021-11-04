@@ -276,7 +276,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   camera.aspect = canvas.clientWidth / canvas.clientHeight;
   camera.updateProjectionMatrix();
-  console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}`);
+  // console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}`);
   // renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 

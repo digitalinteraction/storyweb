@@ -146,7 +146,7 @@
     "connections": [1],
     "imgCredit": "A Selkie at Culzean Country Park by Mary and Angus Hogg on Geograph",
     "sndCredit": "Miss Sarah MacFayden's (Orkney Folk Tune) played by Amy Thatcher",
-    "imgLink": "",
+    "imgLink": "https://www.geograph.org.uk/photo/6846115",
     "soundLink": ""
   },
   {
@@ -253,5 +253,47 @@
     "sndCredit": "Brasside Pond, Underwater by David de la Haye",
     "imgLink": "",
     "soundLink": ""
+  },
+  {
+    "id": 17,
+    "name": "Herring Gulls' Changing Diet",
+    "desc": "In the UK, Herring Gull populations have declined drastically since the 1970s. Studying stable isotopes in the feathers of museum specimens shows us that the gulls’ diets have changed dramatically over this period and may be one of the reasons for their declining numbers. This revealed that, in North East England, Herring Gulls alive in the 1970s appear to have been feeding on large fish all year round. The diet of gulls has changed to include more land-based food including scavenging at rubbish dumps. Changes to waste disposal are likely to impact gulls, with fewer landfill sites meaning fewer feeding opportunities for gulls.",
+    "sound": "seagullshow",
+    "image": "gullskins.jpg",
+    "thumb": "gullskins_sq.jpg",
+    "position": [14, 10],
+    "connections": [10],
+    "imgCredit": "Gull Skins, Tyne & Wear Archives & Museums",
+    "sndCredit": "Seagull Show by GirlWithSoundRecorder on freesound.org (CC0 1.0)",
+    "imgLink": "",
+    "soundLink": "https://freesound.org/s/493253/"
+  },
+  {
+    "id": 18,
+    "name": "Abandoning Fairbourne to the Sea",
+    "desc": "Fairbourne is a village in mid-Wales that will be so affected by climate change that residents will have to leave. In 2013, Gwynedd Council decided that it could no longer protect Fairbourne against rising sea levels in the long term. From 2054, no more money will be spent on sea-defences for the 400 homes in the village and the 850 residents will need to relocate. Fairbourne residents will become the UK’s first climate refugees.",
+    "sound": "villagebuffet",
+    "image": "fairbourne.jpg",
+    "thumb": "fairbourne_sq.jpg",
+    "position": [12, 15],
+    "connections": [5],
+    "imgCredit": "Fairbourne, Gwynedd by Chris Andrews on Geograph (cc-by-sa/2.0)",
+    "sndCredit": "Village Buffet by Walter Odington on freesound.org (CC0 1.0)",
+    "imgLink": "https://www.geograph.org.uk/photo/6001972",
+    "soundLink": "https://freesound.org/s/26223/ "
+  },
+  {
+    "id": 19,
+    "name": "Plastic Pollution",
+    "desc": "12 million tonnes of plastic are pouring into the ocean every year. Plastic has been found in the deepest parts of the ocean, as far away as the Antarctic and across UKs beaches. Birds, whales and turtles are killed when they mistake plastics for food or when they get tangled in packaging and fishing gear. The root cause of plastic pollution is the over-production and over-consumption of non-essential single-use, throw away and polluting plastics. – Surfers Against Sewage",
+    "sound": "plasticbag",
+    "image": "plasticbeach.jpg",
+    "thumb": "plasticbeach_sq.jpg",
+    "position": [15, 11],
+    "connections": [7, 17],
+    "imgCredit": "Paolo Margari on Flickr (CC BY-NC-ND 2.0)",
+    "sndCredit": "Plastic Bag by mars_98 on freesound.org (CC BY 3.0)",
+    "imgLink": "https://flic.kr/p/4LfaRZ ",
+    "soundLink": "https://freesound.org/s/445035/"
   }
 ]

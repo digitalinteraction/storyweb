@@ -8,19 +8,33 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 </head>
 <body>
-  <!-- Modal/popover -->
-  <div id="startModal">
-    Welcome
-    <button id="welcomeModalButton">Explore</button>
+  <!-- Overlay and modal -->
+  <div id="startModalOverlay">
   </div>
+
+  <div class="modal" id="startModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Story:Web</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalButton"></button>
+        </div>
+        <div class="modal-body">
+          <p>Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="welcomeModalButton">Start Exploring</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="container-fluid fill">
     <div class="row fill">
 
       <div class="col-sm-8 px-0 canvas-div">
         <canvas id="c"></canvas>
       </div>
-
-      
 
       <div class="col-sm-4 px-0 info-panel d-sm-flex flex-column">
         <div class="row pb-2 flex-grow-1">
@@ -33,7 +47,7 @@
         <div class="row mb-4 align-items-end flex-grow-1">
           <div class="col-2">
             <div>
-              <img src="./assets/help.png" alt="Help icon">
+              <img src=<%=require("./assets/help.png")%> alt="Help icon">
             </div>
           </div>
           <div class="col instructions">
@@ -41,7 +55,7 @@
             <div class="instText">Tap it again to mute other sounds</div>
           </div>
           <div class="col align-self-end">
-            <img src="./assets/logo8.png" style="width: 200px;" alt="Story:Web">
+            <img src=<%=require("./assets/logo8.png")%> style="width: 200px;" alt="Story:Web">
           </div>
         </div>
       </div>

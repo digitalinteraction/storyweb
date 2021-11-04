@@ -41,13 +41,16 @@ const soundFiles = importAll(require.context('./assets/sounds', false, /\.(mp3)$
 // console.log(soundFiles['background.mp3'].default);
 
 function startScene() {
-  console.log('Trigger start scene');
+  const startModalOverlay = document.querySelector('#startModalOverlay');
+  startModalOverlay.style.display = 'none';
   const startModal = document.querySelector('#startModal');
   startModal.style.display = 'none';
 }
+// Set various elements to trigger close
 const welcomeButton = document.querySelector('#welcomeModalButton');
+const closeModalButton = document.querySelector('#closeModalButton');
 welcomeButton.onclick = startScene;
-
+closeModalButton.onclick = startScene;
 
 const TWEEN = require('@tweenjs/tween.js');
 

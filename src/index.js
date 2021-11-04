@@ -22,6 +22,8 @@ import backgroundImg from './assets/background.png';
 import audioOff from './assets/audioOff.png';
 import audioOn from './assets/audioOn.png';
 
+import './favicons/favicons';
+
 // Import all files
 function importAll(r) {
   const files = {};

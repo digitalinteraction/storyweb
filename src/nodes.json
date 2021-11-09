@@ -292,7 +292,20 @@
     "connections": [7, 17],
     "imgCredit": "Paolo Margari on Flickr (CC BY-NC-ND 2.0)",
     "sndCredit": "Plastic Bag by mars_98 on freesound.org (CC BY 3.0)",
-    "imgLink": "https://flic.kr/p/4LfaRZ ",
+    "imgLink": "https://flic.kr/p/4LfaRZ",
     "soundLink": "https://freesound.org/s/445035/"
+  },{
+    "id": 20,
+    "name": "Food Waste",
+    "desc": "If food waste was a country, it would be the third largest producer of greenhouse gases after the United States and China. 26% of global greenhouse gas emissions come from producing our food and the food we waste represents 6% of global greenhouse gas emissions. This is about three times the amount of emissions from aviation. This photo, from a German industrial bakery in 2014, shows one day’s worth of wasted pastries. At the front left there is leftover dough that has been baked to make disposal easier.",
+    "sound": "",
+    "image": "./assets/bakeryfoodwaste.jpg",
+    "thumb": "./assets/bakeryfoodwaste_sq.jpg",
+    "position": [13, 11],
+    "connections": [10],
+    "imgCredit": "Foerster, CC0, via Wikimedia Commons",
+    "sndCredit": "",
+    "imgLink": "https://commons.wikimedia.org/wiki/File:Wasted_pastries_from_industrial_bakery.JPG",
+    "soundLink": ""
   }
 ]

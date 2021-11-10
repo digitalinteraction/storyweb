@@ -47,6 +47,7 @@ function startScene() {
   startModalOverlay.style.display = 'none';
   const startModal = document.querySelector('#startModal');
   startModal.style.display = 'none';
+  playAudio();
 }
 // Set various elements to trigger close
 const welcomeButton = document.querySelector('#welcomeModalButton');
@@ -110,7 +111,6 @@ function init() {
     bgSound.setBuffer(buffer);
     bgSound.setLoop(true);
     bgSound.setVolume(def.sound.backgroundVol);
-    bgSound.play();
     bgSound.name = 'backgroundSound';
   });
   sounds.push(bgSound);
@@ -184,7 +184,6 @@ function init() {
         sound.setRefDistance(5);
         sound.setLoop(true);
         sound.setVolume(volume);
-        sound.play();
         sound.name = soundName;
       });
       boxMesh.add(sound);
@@ -302,6 +301,16 @@ function init() {
   // Info panel
   infoPanel = document.querySelector('#info-template');
   infoPanel.innerHTML = defaultTemplate();
+}
+
+function playAudio() {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const el of sounds) {
+    // Only start audio that is not playing. This is just a fail safe.
+    if (!el.isPlaying) {
+      el.play();
+    }
+  }
 }
 
 function restartAudio() {

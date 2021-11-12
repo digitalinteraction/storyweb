@@ -8,7 +8,8 @@ export const settings = {
     far: 1000,
     startX: -40,
     startY: 40,
-    startZ: 50,
+    startZ: 100,
+    mobileStartZ: 100,
   },
   light: [
     {
@@ -39,8 +40,8 @@ export const settings = {
     detail: 4,
   },
   node: {
-    height: 12,
-    width: 12,
+    height: 20,
+    width: 20,
     depth: 3.5,
     defaultZ: 0,
   },
@@ -68,17 +69,17 @@ export const settings = {
     clickEvent: false,
     objectSelection: false,
     goToObject: false,
-    highlightSelection: false,
+    highlightSelection: true,
     edgeCalculation: false,
     axesHelper: false,
   },
   sound: {
-    refDistance: 5,
-    iconSize: 3,
-    iconOffsetXY: 5,
+    refDistance: 10,
+    iconSize: 5,
+    iconOffsetXY: 8,
     iconOffsetZ: 2,
     backgroundAudio: 'background',
-    backgroundVol: 0.5,
+    backgroundVol: 0.3,
   },
   timeout: {
     // time: 900000, // 15 mins

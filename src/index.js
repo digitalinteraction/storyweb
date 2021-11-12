@@ -277,7 +277,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   camera.aspect = canvas.clientWidth / canvas.clientHeight;
   camera.updateProjectionMatrix();
-  // console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}`);
+  // console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}, window is also ${window.innerWidth} x ${window.innerHeight}`);
   // renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
@@ -325,13 +325,13 @@ function restartAudio() {
 
 function stopAudio(soundName) {
   // Iterate all sounds and do sound.stop
+  // Leave the passed in name running
   // eslint-disable-next-line no-restricted-syntax
   for (const el of sounds) {
     if (el.name !== soundName) {
       el.stop();
     }
   }
-  // Leave the passed in name running
 }
 
 function setTouchTime() {
@@ -434,6 +434,7 @@ function toggleHighlightAudio(soundName) {
 }
 
 function onWindowResize() {
+  console.log('triggering resize');
   const canvas = renderer.domElement;
   camera.aspect = canvas.clientWidth / canvas.clientHeight;
   camera.updateProjectionMatrix();

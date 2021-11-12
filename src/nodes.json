@@ -298,14 +298,27 @@
     "id": 20,
     "name": "Food Waste",
     "desc": "If food waste was a country, it would be the third largest producer of greenhouse gases after the United States and China. 26% of global greenhouse gas emissions come from producing our food and the food we waste represents 6% of global greenhouse gas emissions. This is about three times the amount of emissions from aviation. This photo, from a German industrial bakery in 2014, shows one day’s worth of wasted pastries. At the front left there is leftover dough that has been baked to make disposal easier.",
-    "sound": "",
+    "sound": "binlorry",
     "image": "./assets/bakeryfoodwaste.jpg",
     "thumb": "./assets/bakeryfoodwaste_sq.jpg",
     "position": [13, 11],
     "connections": [10],
     "imgCredit": "Foerster, CC0, via Wikimedia Commons",
-    "sndCredit": "",
+    "sndCredit": "Excerpt from Covid Crepusculars #1 by John Levack Drever on SoundCloud.",
     "imgLink": "https://commons.wikimedia.org/wiki/File:Wasted_pastries_from_industrial_bakery.JPG",
+    "soundLink": "https://soundcloud.com/john-levack-drever/covid-crepusculars-1"
+  },{
+    "id": 21,
+    "name": "Frightening Waves",
+    "desc": "The sounds of waves are calming for many of us. But for those who have experienced extreme weather events, they can be reminders of the devastation caused by storms. In November 2013, Typhoon Haiyan (also known as Super Typhoon Yolanda) hit the Philippines. The typhoon killed more than 6000 people, left another 1800 people missing, and affected the lives of 14 million Filipinos. Climate change means that extreme weather events including typhoons will become more frequent. This photo shows squatters’ shanties along the sea wall of Vitas Tondo in Manila, Philippines, as they face waves produced by strong winds brought about by Typhoon Chanthu (also known as Typhoon Kiko) in 2021.",
+    "sound": "Excerpt from Covid Crepusculars #1 by John Levack Drever on SoundCloud.",
+    "image": "./assets/typhoonwaves.jpg",
+    "thumb": "./assets/typhoonwaves_sq.jpg",
+    "position": [12, 16],
+    "connections": [5, 14],
+    "imgCredit": "Ernie Penaredondo/Global Water Partnership on Flickr (CC BY-NC-SA 2.0)",
+    "sndCredit": "",
+    "imgLink": "https://flic.kr/p/88MtVu",
     "soundLink": ""
   }
 ]

@@ -279,6 +279,8 @@ function init() {
   camera.updateProjectionMatrix();
   // console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}, window is also ${window.innerWidth} x ${window.innerHeight}`);
   // renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Test comment this out
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
   // Controls

@@ -5,4 +5,6 @@ webpack-notes.md
 *.code-workspace
 .DS_Store
 
-dist
+dist/*.*
+dist/assets
+dist/src

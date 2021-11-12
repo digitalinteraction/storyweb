@@ -1,25 +1,39 @@
 html, body {
   margin: 0; 
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   background-color: black;
   overflow-x: hidden;
 }
 #c {
-  /* width: 100%;
-  height: 100%; */
   width: 100%;
-  height: 896px;
+  height: 100%;
+  /* width: 100%;
+  height: 896px; */
 }
 
-.fill {
- min-height: 100%;
- height: 100%;
+#mob-prev-modal {
+  position: absolute;
+  top: 60vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  display: none;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 10%;
+  padding: 0.5em;
 }
 
 .info-panel {
  /* color: white; */
  text-align: center;
+}
+
+.overlay-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7vw;
 }
 
 #info-template {
@@ -47,16 +61,15 @@ html, body {
  font-weight: bold;
 }
 
-/* @media screen and (max-width: 576px) {
-  #c {
-    height: 50%
-  }
+/* Max mobile portrait screen width */
+@media screen and (max-width: 414px) {
 
-  .info-card {
-    overflow: scroll;
-    height: 50%;
+  /* Scale overlay logo */
+  .overlay-logo {
+    width: 20vw;
   }
-} */
+  
+}
 
 #info {
 	position: absolute;

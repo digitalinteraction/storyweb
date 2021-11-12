@@ -320,5 +320,18 @@
     "sndCredit": "",
     "imgLink": "https://flic.kr/p/88MtVu",
     "soundLink": ""
+  },{
+    "id": 22,
+    "name": "Ocean Acidification",
+    "desc": "Increasing ocean acidity is another effect of climate change where carbon dioxide reacts with water to form carbonic acid. Recent research at the University of Hull shows this can affect the ‘messenger molecules’ used by marine creatures to detect and signal to each other. For example, this can make it harder for shore crabs to ‘smell’ and care for their young. Ocean acidification is also increasing the amount of biotoxins that are used by animals like pufferfish and harmful algae blooms.",
+    "sound": "",
+    "image": "./assets/shorecrab.jpg",
+    "thumb": "./assets/shorecrab_sq.jpg",
+    "position": [12, 12],
+    "connections": [15, 16],
+    "imgCredit": "Shore Crab with Common Starfish by Lars Behnke on Flickr (CC BY-ND 2.0)",
+    "sndCredit": "",
+    "imgLink": "https://flic.kr/p/CYyVeH",
+    "soundLink": ""
   }
 ]

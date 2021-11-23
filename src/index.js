@@ -80,6 +80,37 @@ const clock = new THREE.Clock();
 
 const extLoader = new THREE.TextureLoader();
 
+// Controls for mobile modals
+const prevModal = document.querySelector('#mob-prev-modal');
+const prevModalButton = document.querySelector('#prevMoreButton');
+prevModalButton.onclick = displayMainModal;
+const mainModal = document.querySelector('#mob-main-modal');
+const mainModalClose = document.querySelector('#mainModalClose');
+mainModalClose.onclick = hideMainModal;
+let prevModalVisible = false;
+let mainModalVisible = false;
+
+function togglePrevModal(enable) {
+  if (enable) {
+    prevModal.style.display = 'block';
+    prevModalVisible = true;
+  } else {
+    prevModal.style.display = 'none';
+    prevModalVisible = false;
+  }
+}
+
+function displayMainModal() {
+  togglePrevModal(false);
+  mainModal.style.display = 'block';
+  mainModalVisible = true;
+}
+
+function hideMainModal() {
+  mainModal.style.display = 'none';
+  mainModalVisible = false;
+}
+
 function init() {
   // Camera
   camera = new THREE.PerspectiveCamera(
@@ -470,8 +501,10 @@ function onDocumentMouseUp(event) {
 function selectObject(intersectObj) {
   // Select the object
   INTERSECTED = intersectObj; // Store the last intersected thing
+  console.log("intersected");
+  console.log(INTERSECTED);
   selectedObject = intersectObj; // Store object for later reference
-  // console.log(selectedObject);
+  console.log(selectedObject);
   infoPanel.innerHTML = generateTemplate(selectedObject.name);
 
   if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);
@@ -488,6 +521,7 @@ function selectObject(intersectObj) {
     .onComplete(() => {
       // Remove blue highlight once moved
       deselectObject();
+      togglePrevModal(true);
     });
   if (def.debug.goToObject) {
     console.log(`Going to object pos: ${intersectObj.position.x}, ${intersectObj.position.y}`);
@@ -531,6 +565,7 @@ function render() {
             if (def.debug.highlightSelection) console.log('Clicked different, removing old colouring');
             audioIconOff(''); // Switch off all icons
             deselectObject();
+            togglePrevModal(false);
 
             // Switch all audio back on
             isAudioHighlighted = false;

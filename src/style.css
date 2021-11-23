@@ -24,6 +24,17 @@ html, body {
   padding: 0.5em;
 }
 
+#mob-main-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 10%;
+  padding: 0.5em;
+}
+
 .info-panel {
  /* color: white; */
  text-align: center;
@@ -61,16 +72,6 @@ html, body {
  font-weight: bold;
 }
 
-/* Max mobile portrait screen width */
-@media screen and (max-width: 414px) {
-
-  /* Scale overlay logo */
-  .overlay-logo {
-    width: 20vw;
-  }
-  
-}
-
 #info {
 	position: absolute;
 	top: 10px;
@@ -96,4 +97,18 @@ html, body {
   display: block;
   background-color: white;
   opacity: 0.5;
+}
+
+/* Max mobile portrait screen width */
+@media screen and (max-width: 414px) {
+
+  /* Scale overlay logo */
+  .overlay-logo {
+    width: 20vw;
+  }
+
+  #mob-prev-modal {
+
+  }
+  
 }

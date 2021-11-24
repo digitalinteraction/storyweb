@@ -12,6 +12,7 @@ import nodes from './nodes.json';
 import {
   defaultTemplate,
   generateTemplate,
+  getName,
   getIdbySoundName,
 } from './nodesHelpers';
 import { settings as def } from './defaults';
@@ -30,30 +31,40 @@ function importAll(r) {
   r.keys().map((item) => { files[item.replace('./', '')] = r(item); });
   return files;
 }
-// Images
+// Images & sounds
 const images = importAll(require.context('./assets/images', false, /\.(png|jpe?g|svg)$/));
-// console.log('images');
-// console.log(images);
-// console.log(images['cuddyducks_sq.jpg']);
-
-// Sounds
 const soundFiles = importAll(require.context('./assets/sounds', false, /\.(mp3)$/));
-// console.log('sounds');
-// console.log(soundFiles);
-// console.log(soundFiles['background.mp3'].default);
+
+let startModalVisible = true;
 
 function startScene() {
   const startModalOverlay = document.querySelector('#startModalOverlay');
   startModalOverlay.style.display = 'none';
   const startModal = document.querySelector('#startModal');
   startModal.style.display = 'none';
+  startModalVisible = false;
   playAudio();
 }
-// Set various elements to trigger close
+
+// Get DOM elements
 const welcomeButton = document.querySelector('#welcomeModalButton');
 const closeModalButton = document.querySelector('#closeModalButton');
+const prevModal = document.querySelector('#mob-prev-modal');
+const prevModalTitle = document.querySelector('#prevModalTitle');
+const prevModalButton = document.querySelector('#prevMoreButton');
+const mainModal = document.querySelector('#mob-main-modal');
+const mainModalClose = document.querySelector('#mainModalClose');
+
+// Controls to know what is on screen
+let prevModalVisible = false;
+let mainModalVisible = false;
+let clickCooldown = false;
+let cooldownTimer = 0;
+
 welcomeButton.onclick = startScene;
 closeModalButton.onclick = startScene;
+prevModalButton.onclick = displayMainModal;
+mainModalClose.onclick = hideMainModal;
 
 const TWEEN = require('@tweenjs/tween.js');
 
@@ -80,15 +91,26 @@ const clock = new THREE.Clock();
 
 const extLoader = new THREE.TextureLoader();
 
-// Controls for mobile modals
-const prevModal = document.querySelector('#mob-prev-modal');
-const prevModalButton = document.querySelector('#prevMoreButton');
-prevModalButton.onclick = displayMainModal;
-const mainModal = document.querySelector('#mob-main-modal');
-const mainModalClose = document.querySelector('#mainModalClose');
-mainModalClose.onclick = hideMainModal;
-let prevModalVisible = false;
-let mainModalVisible = false;
+// Control display of modals & control clicks
+function setClickCooldown() {
+  clickCooldown = true;
+  cooldownTimer = def.timeout.cooldown;
+}
+
+function serviceCooldown() {
+  if (clickCooldown) {
+    console.log('in cooldown');
+    if (eventClickedObject) {
+      eventClickedObject = false;
+    }
+    if (cooldownTimer - 1 === 0) {
+      clickCooldown = false;
+      cooldownTimer = 0;
+    } else {
+      cooldownTimer -= 1;
+    }
+  }
+}
 
 function togglePrevModal(enable) {
   if (enable) {
@@ -101,14 +123,17 @@ function togglePrevModal(enable) {
 }
 
 function displayMainModal() {
+  console.log('setting main modal visible');
   togglePrevModal(false);
   mainModal.style.display = 'block';
   mainModalVisible = true;
 }
 
 function hideMainModal() {
+  console.log('setting main modal hidden');
   mainModal.style.display = 'none';
   mainModalVisible = false;
+  setClickCooldown();
 }
 
 function init() {
@@ -501,11 +526,9 @@ function onDocumentMouseUp(event) {
 function selectObject(intersectObj) {
   // Select the object
   INTERSECTED = intersectObj; // Store the last intersected thing
-  console.log("intersected");
-  console.log(INTERSECTED);
   selectedObject = intersectObj; // Store object for later reference
-  console.log(selectedObject);
   infoPanel.innerHTML = generateTemplate(selectedObject.name);
+  prevModalTitle.innerHTML = getName(selectedObject.name);
 
   if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);
 
@@ -544,20 +567,20 @@ function render() {
   TWEEN.update();
 
   // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
-  if (eventClickedObject) {
+  if (eventClickedObject && !clickCooldown) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
 
-    // object.geometry.type === "BoxGeometry"
-
     // If we have intersected things
     if (intersects.length > 0) {
-      // If we have intersected a new thing (closest)
+      // If closest object is new
       if (INTERSECTED !== intersects[0].object) {
-        // console.log(INTERSECTED, intersects[0].object);
-
-        // Only want to select boxGeometry (crude check for now)
-        if (intersects[0].object.geometry.type === 'BoxGeometry') {
+        // BoxGeometry = main boxes. Only process if modals are not displayed
+        if (
+          intersects[0].object.geometry.type === 'BoxGeometry'
+          && !startModalVisible
+          && !mainModalVisible
+        ) {
           if (def.debug.objectSelection) console.log(`checking intersected ${INTERSECTED}`);
 
           // If we have selectedObject stored (we clicked something previously)
@@ -616,7 +639,9 @@ function render() {
         }
       } else if (intersects[0].object === selectedObject) {
         // We have clicked on the same item
-        console.log('clicked on same item');
+        if (!prevModalVisible) {
+          togglePrevModal(true);
+        }
         // If there is an audio attached it will be a child
         if (selectedObject.children.length > 0) {
           // NOTE: We are assuming here the 1st child is the audio (we only have audio as children)
@@ -634,6 +659,7 @@ function render() {
     eventClickedObject = false;
   }
 
+  serviceCooldown();
   renderer.render(scene, camera);
 
   // requestAnimationFrame(render);

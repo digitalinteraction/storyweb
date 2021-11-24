@@ -26,13 +26,14 @@ html, body {
 
 #mob-main-modal {
   position: absolute;
-  top: 0;
+  top: 1em;
   left: 0;
   display: none;
   background-color: white;
   border: 1px solid grey;
-  border-radius: 10%;
+  border-radius: 2%;
   padding: 0.5em;
+  padding-bottom: 1em;
 }
 
 .info-panel {

@@ -8,7 +8,7 @@ export const settings = {
     far: 1000,
     startX: -40,
     startY: 40,
-    startZ: 100,
+    startZ: 70,
     mobileStartZ: 100,
   },
   light: [
@@ -84,8 +84,11 @@ export const settings = {
   timeout: {
     // time: 900000, // 15 mins
     time: 180000, // 3 min
-    // time: 60000, // 1 min
+    // time: 60000, // 1 min TESTING
     cooldown: 70, // Click cooldown on closing modal
+  },
+  window: {
+    mobileMaxWidth: 450,  //414 is a little too narrow
   },
 };
 

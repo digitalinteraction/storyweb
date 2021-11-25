@@ -35,8 +35,6 @@ function importAll(r) {
 const images = importAll(require.context('./assets/images', false, /\.(png|jpe?g|svg)$/));
 const soundFiles = importAll(require.context('./assets/sounds', false, /\.(mp3)$/));
 
-let startModalVisible = true;
-
 function startScene() {
   const startModalOverlay = document.querySelector('#startModalOverlay');
   startModalOverlay.style.display = 'none';
@@ -44,6 +42,7 @@ function startScene() {
   startModal.style.display = 'none';
   startModalVisible = false;
   playAudio();
+  // setClickCooldown();
 }
 
 // Get DOM elements
@@ -56,6 +55,7 @@ const mainModal = document.querySelector('#mob-main-modal');
 const mainModalClose = document.querySelector('#mainModalClose');
 
 // Controls to know what is on screen
+let startModalVisible = true;
 let prevModalVisible = false;
 let mainModalVisible = false;
 let clickCooldown = false;
@@ -85,6 +85,7 @@ const sounds = [];
 const icons = [];
 let eventClickedObject = false;
 let lastTouchObject = Date.now();
+let timedOut = false;
 
 const mouse = new THREE.Vector2();
 const clock = new THREE.Clock();
@@ -99,7 +100,6 @@ function setClickCooldown() {
 
 function serviceCooldown() {
   if (clickCooldown) {
-    console.log('in cooldown');
     if (eventClickedObject) {
       eventClickedObject = false;
     }
@@ -134,6 +134,17 @@ function hideMainModal() {
   mainModal.style.display = 'none';
   mainModalVisible = false;
   setClickCooldown();
+}
+
+function setCameraPosition(clientWidth) {
+  // Set camera based on display width
+  if (clientWidth > def.window.mobileMaxWidth) {
+    console.log('desktop width');
+    camera.position.set(def.camera.startX, def.camera.startY, def.camera.startZ);
+  } else {
+    camera.position.set(def.camera.startX, def.camera.startY, def.camera.mobileStartZ);
+    console.log('mobile width');
+  }
 }
 
 function init() {
@@ -336,6 +347,9 @@ function init() {
   // console.log(`Set renderer width to: ${canvas.clientWidth}, ${canvas.clientHeight}, window is also ${window.innerWidth} x ${window.innerHeight}`);
   // renderer.setSize(window.innerWidth, window.innerHeight);
 
+  // Set initial camera position based on mobile/desktop
+  setCameraPosition(canvas.clientWidth);
+
   // Test comment this out
   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
@@ -434,42 +448,33 @@ function audioIconOff(iconName) {
 }
 
 function timeoutScene() {
-  console.log('triggering timeout of scene');
-  const firstObj = scene.getObjectByName(0);
-  // camera.position.x = firstObj.position.x;
-  // camera.position.y = firstObj.position.y;
-  const { x, y } = firstObj.position;
+  if (!timedOut) {
+    const firstObj = scene.getObjectByName(0);
+    // camera.position.x = firstObj.position.x;
+    // camera.position.y = firstObj.position.y;
+    const { x, y } = firstObj.position;
 
-  new TWEEN.Tween(camera.position)
-    .to({
-      x,
-      y,
-      // z: z + 20,
-    }, 1000)
-    .start();
-  setTouchTime();
+    new TWEEN.Tween(camera.position)
+      .to({
+        x,
+        y,
+        // z: z + 20,
+      }, 1000)
+      .start();
+    setTouchTime();
 
-  // Needs to deselect the node/edge and change the colouring
-  deselectObject(true);
-  restartAudio();
-  audioIconOff('');
+    // Needs to deselect the node/edge and change the colouring
+    deselectObject(true);
+    togglePrevModal(false);
+    hideMainModal();
+    restartAudio();
+    audioIconOff('');
+    timedOut = true;
+  }
 }
 
 function toggleAudioIcon(iconName, setIcon) {
-  // if (iconName === highlightedAudioName) {
-  //   console.log('we are currently highlighting it, so it should toggle off');
-  //   audioIconOff('');
-  // } else {
-  //   audioIconOff(iconName);
-  // }
   audioIconOff(iconName);
-  // const iconMesh = scene.getObjectByName(iconName);
-
-  // if (setIcon) {
-  //   iconMesh.material = audioOnMaterial;
-  // } else {
-  //   iconMesh.material = audioOffMaterial;
-  // }
 }
 
 function toggleHighlightAudio(soundName) {
@@ -559,7 +564,6 @@ function render() {
   const delta = clock.getDelta();
 
   if (checkTouchTime()) timeoutScene();
-  // controls.movementSpeed = 0.33 * d;
   if (def.debug.godMode) controls.update(delta);
 
   camera.updateMatrixWorld();
@@ -568,12 +572,13 @@ function render() {
 
   // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
   if (eventClickedObject && !clickCooldown) {
+    timedOut = false;
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
 
     // If we have intersected things
     if (intersects.length > 0) {
-      // If closest object is new
+      // If closest object is not same as what we have selected
       if (INTERSECTED !== intersects[0].object) {
         // BoxGeometry = main boxes. Only process if modals are not displayed
         if (
@@ -583,29 +588,27 @@ function render() {
         ) {
           if (def.debug.objectSelection) console.log(`checking intersected ${INTERSECTED}`);
 
-          // If we have selectedObject stored (we clicked something previously)
+          // If we have selectedObject stored, deselect and stop all highlight features
           if (selectedObject) {
             if (def.debug.highlightSelection) console.log('Clicked different, removing old colouring');
-            audioIconOff(''); // Switch off all icons
             deselectObject();
             togglePrevModal(false);
 
             // Switch all audio back on
+            audioIconOff(''); // Toggle off all icons
             isAudioHighlighted = false;
             restartAudio();
           }
 
           // Trigger select obj
           selectObject(intersects[0].object);
-
-          // if (def.debug.objectSelection) console.log(intersects[0]);
         } else if (intersects[0].object.geometry.type === 'PlaneGeometry') {
           // Audio icons are the only planeGeometry in the scene
           // Check name just to be sure
           const iconName = intersects[0].object.name;
           const iconPos = iconName.search('(_icon)'); // Store position as we use below
           if (iconName && iconPos !== -1) {
-            console.log(`Clicked on icon named ${iconName}`);
+            if (def.debug.objectSelection) console.log(`Clicked on icon named ${iconName}`);
             const soundName = iconName.slice(0, iconPos); // Stip _icon
             // Get ID this is attached to
             const selectId = getIdbySoundName(soundName);

@@ -139,11 +139,9 @@ function hideMainModal() {
 function setCameraPosition(clientWidth) {
   // Set camera based on display width
   if (clientWidth > def.window.mobileMaxWidth) {
-    console.log('desktop width');
-    camera.position.set(def.camera.startX, def.camera.startY, def.camera.startZ);
+    camera.position.set(camera.position.x, camera.position.y, def.camera.startZ);
   } else {
-    camera.position.set(def.camera.startX, def.camera.startY, def.camera.mobileStartZ);
-    console.log('mobile width');
+    camera.position.set(camera.position.x, camera.position.y, def.camera.mobileStartZ);
   }
 }
 
@@ -497,11 +495,17 @@ function toggleHighlightAudio(soundName) {
 }
 
 function onWindowResize() {
-  console.log('triggering resize');
-  const canvas = renderer.domElement;
-  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  // const canvas = renderer.domElement;
+  camera.aspect = window.innerWidth / window.innerHeight;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Old code used canvas, which doesn't change size
+  // camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  // renderer.setSize(canvas.clientWidth, canvas.clientHeight);
   camera.updateProjectionMatrix();
-  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+  // Check if camera needs to be moved
+  setCameraPosition(window.innerWidth);
 }
 
 function onDocumentMouseUp(event) {

@@ -14,6 +14,7 @@ import {
   generateTemplate,
   getName,
   getIdbySoundName,
+  getSoundName,
 } from './nodesHelpers';
 import { settings as def } from './defaults';
 import './style.css';
@@ -53,6 +54,8 @@ const prevModalTitle = document.querySelector('#prevModalTitle');
 const prevModalButton = document.querySelector('#prevMoreButton');
 const mainModal = document.querySelector('#mob-main-modal');
 const mainModalClose = document.querySelector('#mainModalClose');
+const mainModalListenIn = document.querySelector('#mainModalListenIn');
+const mainModalButtonContainer = document.querySelector('#mainModalButtonContainer');
 
 // Controls to know what is on screen
 let startModalVisible = true;
@@ -61,10 +64,30 @@ let mainModalVisible = false;
 let clickCooldown = false;
 let cooldownTimer = 0;
 
+// Bing methods to DOM objects
 welcomeButton.onclick = startScene;
 closeModalButton.onclick = startScene;
 prevModalButton.onclick = displayMainModal;
 mainModalClose.onclick = hideMainModal;
+mainModalListenIn.onclick = listenInButton;
+// mainModalButtonContainer.appendChild(generateListenButton(0));
+// mainModalButtonContainer.innerHTML = generateListenButton(0);
+
+function listenInButton() {
+  // We shouldn't display anything if there's no sound to highlight
+  console.log('we should now listen in to', getSoundName(selectedObject.name));
+  toggleHighlightAudio(getSoundName(selectedObject.name));
+}
+
+function toggleListenButtonStyle(value) {
+  if (value) {
+    mainModalListenIn.classList.remove('btn-secondary');
+    mainModalListenIn.classList.add('btn-success');
+  } else {
+    mainModalListenIn.classList.add('btn-secondary');
+    mainModalListenIn.classList.remove('btn-success');
+  }
+}
 
 const TWEEN = require('@tweenjs/tween.js');
 
@@ -471,26 +494,39 @@ function timeoutScene() {
   }
 }
 
+function toggleListenInButton(objectName) {
+  if (getSoundName(objectName)) {
+    mainModalListenIn.style.display = 'inline-block';
+  } else {
+    mainModalListenIn.style.display = 'none';
+  }
+}
+
 function toggleAudioIcon(iconName, setIcon) {
   audioIconOff(iconName);
 }
 
 function toggleHighlightAudio(soundName) {
-  // console.log(`toggling ${soundName}, currently highlight: ${isAudioHighlighted}`);
-  if (isAudioHighlighted) {
-    // Disable highlight
-    console.log("disabling highlight");
-    isAudioHighlighted = false;
-    highlightedAudioName = '';
-    restartAudio();
-    // toggleAudioIcon(`${soundName}_icon`, false);
-    audioIconOff();
-  } else {
-    // Enable highlight
-    isAudioHighlighted = true;
-    highlightedAudioName = soundName;
-    stopAudio(soundName);
-    toggleAudioIcon(`${soundName}_icon`, true);
+  if (!soundName) { console.log('soundname not defined'); }
+  else {
+    console.log(`toggling ${soundName}, currently highlight: ${isAudioHighlighted}`);
+    if (isAudioHighlighted) {
+      // Disable highlight audio
+      console.log("disabling highlight");
+      isAudioHighlighted = false;
+      highlightedAudioName = '';
+      restartAudio();
+      // toggleAudioIcon(`${soundName}_icon`, false);
+      audioIconOff();
+      toggleListenButtonStyle(false);
+    } else {
+      // Enable highlight audio
+      isAudioHighlighted = true;
+      highlightedAudioName = soundName;
+      stopAudio(soundName);
+      toggleAudioIcon(`${soundName}_icon`, true);
+      toggleListenButtonStyle(true);
+    }
   }
 }
 
@@ -537,6 +573,7 @@ function selectObject(intersectObj) {
   INTERSECTED = intersectObj; // Store the last intersected thing
   selectedObject = intersectObj; // Store object for later reference
   infoPanel.innerHTML = generateTemplate(selectedObject.name);
+  toggleListenInButton(selectedObject.name);
   prevModalTitle.innerHTML = getName(selectedObject.name);
 
   if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);

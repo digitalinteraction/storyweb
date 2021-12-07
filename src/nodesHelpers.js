@@ -86,11 +86,5 @@ export function defaultTemplate() {
       Listen through your headphones to hear sounds in 3D
       </p>
     </div>
-
-    
-
-
-
-
   `;
 }

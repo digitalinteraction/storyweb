@@ -20,7 +20,7 @@ html, body {
   display: none;
   background-color: white;
   border: 1px solid grey;
-  border-radius: 10%;
+  border-radius: 1em;
   padding: 0.5em;
 }
 
@@ -58,12 +58,12 @@ html, body {
  /* min-height: 50%; */
 }
 
-.info-card-image-portrait {
+/* .info-card-image-portrait {
  max-width:75%;
  max-height:75%;
  height: auto;
  width:auto;
-}
+} */
 
 .instructions {
  text-align: left;
@@ -110,6 +110,37 @@ html, body {
 
   #mob-prev-modal {
 
+  }
+
+  .info-card-image-portrait {
+    max-width:100%;
+    height: auto;
+    width:auto;
+  }
+  
+}
+
+/* Tablet and up size */
+@media screen and (min-width: 415px) {
+
+  .info-card-image {
+    max-height: 50vh;
+    max-width: 50vw;
+    height: auto;
+    width: auto;
+  }
+
+  .info-card-image-portrait {
+    max-width:50%;
+    max-height:100%;
+    height: auto;
+    width:auto;
+  }
+
+  #mob-main-modal {
+    width: 80vw;
+    left: 50vw;
+    transform: translate(-50%, 0);
   }
   
 }

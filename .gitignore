@@ -4,6 +4,7 @@ node_modules/*
 webpack-notes.md
 *.code-workspace
 .DS_Store
+.vscode/
 
 dist/*.*
 dist/assets

@@ -73,7 +73,7 @@ mainModalListenIn.onclick = actionListenInButton;
 
 function actionListenInButton() {
   // 'selectedObject.name' is the ID of the node we've selected
-  toggleHighlightAudio(getSoundName(selectedObject.name));
+  toggleHighlightAudio(getSoundName(lastSelectedObject.name));
 }
 
 function toggleListenButtonStyle(value) {
@@ -96,9 +96,9 @@ let renderer;
 let listener;
 let edges;
 let INTERSECTED;
-let selectedObject;
+let lastSelectedObject;
 let isAudioHighlighted = false;
-let highlightedAudioName;
+let highlightedIconName = '';
 let infoPanel;
 
 const sounds = [];
@@ -413,14 +413,35 @@ function restartAudio() {
   }
 }
 
+function switchAudio(soundName) {
+  // Iterate all sounds and do sound.stop
+  // Specifically start the passed in name
+  try {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const el of sounds) {
+      if (el.name !== soundName) {
+        if (el.isPlaying) el.stop();
+      } else {
+        el.play();
+      }
+    }
+  } catch (e) {
+    console.log('audioStop:', e);
+  }
+}
+
 function stopAudio(soundName) {
   // Iterate all sounds and do sound.stop
   // Leave the passed in name running
-  // eslint-disable-next-line no-restricted-syntax
-  for (const el of sounds) {
-    if (el.name !== soundName) {
-      el.stop();
+  try {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const el of sounds) {
+      if (el.name !== soundName) {
+        if (el.isPlaying) el.stop();
+      }
     }
+  } catch (e) {
+    console.log('audioStop:', e);
   }
 }
 
@@ -441,8 +462,8 @@ function resetInfoPanel() {
 
 function deselectObject(timeout) {
   // If timeout omitted, will only remove highlighting
-  if (selectedObject) {
-    selectedObject.material.emissive.setHex(0x000000);
+  if (lastSelectedObject) {
+    lastSelectedObject.material.emissive.setHex(0x000000);
   }
   if (timeout) resetInfoPanel();
 }
@@ -503,21 +524,44 @@ function toggleAudioIcon(iconName, setIcon) {
   audioIconOff(iconName);
 }
 
+function setIsAudioHighlighted(set) {
+  isAudioHighlighted = set;
+  console.log('setting isAudioHighlighted to', isAudioHighlighted, 'param:', set);
+}
+
+function switchHighlight(soundName) {
+  setIsAudioHighlighted(true);
+  highlightedIconName = `${soundName}_icon`;
+  switchAudio(soundName);
+  toggleAudioIcon(`${soundName}_icon`, true);
+  console.log('switching highlight from one node to another');
+}
+
 function toggleHighlightAudio(soundName) {
-  if (!soundName) console.log('soundname not defined');
-  else if (isAudioHighlighted) {
+  if (!soundName) {
+    console.log('soundname not defined');
+    return;
+  }
+  if (clickCooldown) {
+    console.log('timed out');
+    return;
+  }
+
+  if (isAudioHighlighted) {
+    console.log('starting all audio');
     // console.log(`toggling ${soundName}, currently highlight: ${isAudioHighlighted}`);
     // Disable highlight audio
-    isAudioHighlighted = false;
-    highlightedAudioName = '';
+    setIsAudioHighlighted(false);
+    highlightedIconName = '';
     restartAudio();
     // toggleAudioIcon(`${soundName}_icon`, false);
     audioIconOff();
     toggleListenButtonStyle(false);
   } else {
     // Enable highlight audio
-    isAudioHighlighted = true;
-    highlightedAudioName = soundName;
+    console.log('highlighting audio', soundName);
+    setIsAudioHighlighted(true);
+    highlightedIconName = `${soundName}_icon`;
     stopAudio(soundName);
     toggleAudioIcon(`${soundName}_icon`, true);
     toggleListenButtonStyle(true);
@@ -565,12 +609,12 @@ function onDocumentMouseUp(event) {
 function selectObject(intersectObj) {
   // Select the object
   INTERSECTED = intersectObj; // Store the last intersected thing
-  selectedObject = intersectObj; // Store object for later reference
-  infoPanel.innerHTML = generateTemplate(selectedObject.name);
-  toggleListenInButton(selectedObject.name);
-  prevModalTitle.innerHTML = getName(selectedObject.name);
+  lastSelectedObject = intersectObj; // Store object for later reference
+  infoPanel.innerHTML = generateTemplate(lastSelectedObject.name);
+  toggleListenInButton(lastSelectedObject.name);
+  prevModalTitle.innerHTML = getName(lastSelectedObject.name);
 
-  if (def.debug.objectSelection) console.log(`intersected set to ${selectedObject}`);
+  if (def.debug.objectSelection) console.log('intersected set to', lastSelectedObject);
 
   // Go to objects position
   const { x, y, z } = intersectObj.position;
@@ -590,7 +634,7 @@ function selectObject(intersectObj) {
     console.log(`Going to object pos: ${intersectObj.position.x}, ${intersectObj.position.y}`);
   }
   // Set highlight colour
-  selectedObject.material.emissive.setHex(0x0000dd);
+  lastSelectedObject.material.emissive.setHex(0x0000dd);
 }
 
 // Main render loop
@@ -608,6 +652,7 @@ function render() {
   // Raycasting (from https://threejs.org/examples/#webgl_interactive_cubes)
   if (eventClickedObject && !clickCooldown) {
     timedOut = false;
+    console.log('audio highlight status:', isAudioHighlighted);
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children);
 
@@ -624,66 +669,95 @@ function render() {
           if (def.debug.objectSelection) console.log(`checking intersected ${INTERSECTED}`);
 
           // If we have selectedObject stored, deselect and stop all highlight features
-          if (selectedObject) {
+          if (lastSelectedObject) {
             if (def.debug.highlightSelection) console.log('Clicked different, removing old colouring');
             deselectObject();
             togglePrevModal(false);
             // Switch all audio back on
             audioIconOff(''); // Toggle off all icons
-            isAudioHighlighted = false;
+            setIsAudioHighlighted(false);
             restartAudio();
           }
 
           // Trigger select obj
           selectObject(intersects[0].object);
         } else if (intersects[0].object.geometry.type === 'PlaneGeometry') {
+          console.log('plane geo');
           // planeGeometry = audio icons + background.
+          const iconObj = intersects[0].object;
           const iconName = intersects[0].object.name;
           const iconPos = iconName.search('(_icon)'); // Store character position as we use below
 
           // If selected planeGeo is an icon
           if (iconName && iconPos !== -1) {
+            console.log('clicked directly on icon');
             if (def.debug.objectSelection) console.log(`Clicked on icon named ${iconName}`);
             const soundName = iconName.slice(0, iconPos); // Strip _icon
             const selectId = getIdbySoundName(soundName); // Get ID this is attached to
-
-            if (selectedObject) {
-              // We have an object selected already
-              // Check we have found the object, then select it
-              // console.log(selectId, selectedObject.name);
-              if (selectId !== false) {
-                if (selectId === selectedObject.name) {
-                  // All we need to do here is toggle the audio on/off
-                  // Trigger audio highlight
+            if (selectId !== false) {
+              // If selectId is valid, we know the cube it is attached to
+              // Go to cube
+              selectObject(scene.getObjectByName(selectId));
+              // Highlight audio or switch audio if moving from one icon to another
+              if (isAudioHighlighted) {
+                if (iconName === highlightedIconName) {
+                  // We have clicked the icon twice, so we want to disable highlight
                   toggleHighlightAudio(soundName);
                 } else {
-                  // console.log(`now selecting object ${selectId}`);
-                  selectObject(scene.getObjectByName(selectId));
+                  // We are clicking highlight icon directly on another node
+                  switchHighlight(soundName);
                 }
               } else {
-                console.log('unable to find object icon attached to');
+                toggleHighlightAudio(soundName);
               }
             } else {
-              // Select the object
-              selectObject(scene.getObjectByName(selectId));
+              console.log('error: icon not attached to node');
             }
+
+            // console.log('select ID is', selectId);
+            // if (selectedObject) {
+            //   console.log('previously selected something', selectedObject, 'we have just selected', iconObj);
+            //   // We have an object selected already
+            //   // Check we have found the object, then select it
+            //   // console.log(selectId, selectedObject.name);
+            //   if (selectId !== false) {
+            //     console.log('selectedObject.name:', selectedObject.name);
+            //     if (selectId === iconObj.name) {
+            //       console.log('going directly to highlight audio');
+            //       // All we need to do here is toggle the audio on/off
+            //       // Trigger audio highlight
+            //       toggleHighlightAudio(soundName);
+            //     } else {
+            //       // console.log(`now selecting object ${selectId}`);
+            //       selectObject(scene.getObjectByName(selectId));
+            //     }
+            //   } else {
+            //     console.log('unable to find object icon attached to');
+            //   }
+            // } else {
+            //   console.log('dont have anything selected');
+            //   // Select the object
+            //   selectObject(scene.getObjectByName(selectId));
+            // }
           }
         }
-      } else if (intersects[0].object === selectedObject) {
+      } else if (intersects[0].object === lastSelectedObject) {
         // We have clicked on the same item
         if (!prevModalVisible) {
           // Display the preview modal if not already visible
           togglePrevModal(true);
         }
-        // If there is an audio attached it will be a child
-        if (selectedObject.children.length > 0) {
-          // NOTE: We are assuming here the 1st child is the audio (we only have audio as children)
-          const audioObj = selectedObject.children[0];
-          if (audioObj.type === 'Audio') {
-            // console.log(audioObj.name, audioObj.type);
-            toggleHighlightAudio(audioObj.name);
-          }
-        }
+        console.log('checking to play audio');
+        // If there is an audio attached it will be a child, and we will play it
+        // 18/01/22: Remove this feature to simplify interaction
+        // if (selectedObject.children.length > 0) {
+        //   // NOTE: We are assuming here the 1st child is the audio (we only have audio as children)
+        //   const audioObj = selectedObject.children[0];
+        //   if (audioObj.type === 'Audio') {
+        //     // console.log(audioObj.name, audioObj.type);
+        //     toggleHighlightAudio(audioObj.name);
+        //   }
+        // }
       }
     } else {
       // We intersected nothing, clear our store

@@ -23,6 +23,7 @@ import './style.css';
 import backgroundImg from './assets/background.png';
 import audioOff from './assets/audioOff.png';
 import audioOn from './assets/audioOn.png';
+import overlayLogo from '../dist/public/overlay-logo.png';
 
 import './favicons/favicons';
 

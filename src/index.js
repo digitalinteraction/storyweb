@@ -465,7 +465,11 @@ function deselectObject(timeout) {
   if (lastSelectedObject) {
     lastSelectedObject.material.emissive.setHex(0x000000);
   }
-  if (timeout) resetInfoPanel();
+  if (timeout) {
+    resetInfoPanel();
+    lastSelectedObject = null;
+    INTERSECTED = null;
+  }
 }
 
 function audioIconOff(iconName) {
@@ -684,7 +688,6 @@ function render() {
         } else if (intersects[0].object.geometry.type === 'PlaneGeometry') {
           console.log('plane geo');
           // planeGeometry = audio icons + background.
-          const iconObj = intersects[0].object;
           const iconName = intersects[0].object.name;
           const iconPos = iconName.search('(_icon)'); // Store character position as we use below
 

@@ -682,6 +682,7 @@ function render() {
             audioIconOff(''); // Toggle off all icons
             setIsAudioHighlighted(false);
             restartAudio();
+            toggleListenButtonStyle(false);
           }
 
           // Trigger select obj

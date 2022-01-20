@@ -23,7 +23,7 @@ import './style.css';
 import backgroundImg from './assets/background.png';
 import audioOff from './assets/audioOff.png';
 import audioOn from './assets/audioOn.png';
-import overlayLogo from '../dist/public/overlay-logo.png';
+import overlayLogo from './assets/overlay-logo.png';
 
 import './favicons/favicons';
 
@@ -36,6 +36,10 @@ function importAll(r) {
 // Images & sounds
 const images = importAll(require.context('./assets/images', false, /\.(png|jpe?g|svg)$/));
 const soundFiles = importAll(require.context('./assets/sounds', false, /\.(mp3)$/));
+
+// Set image on overlay logo (quick hack as not using html-loader for index.html)
+const overlayEl = document.querySelector('#overlay-el');
+overlayEl.src = overlayLogo;
 
 function startScene() {
   const startModalOverlay = document.querySelector('#startModalOverlay');
